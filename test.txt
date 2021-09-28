@@ -1,0 +1,3088 @@
+Stack Overflow
+Products
+Search…
+
+Aik
+1
+, 1 reputation
+1
+Home
+PUBLIC
+Questions
+Tags
+Users
+COLLECTIVES
+Explore Collectives
+FIND A JOB
+Jobs
+Companies
+TEAMS
+Stack Overflow for Teams – Collaborate and share knowledge with a private group. 
+Support for password authentication was removed. Please use a personal access token instead
+Asked 1 month ago
+Active 3 days ago
+Viewed 266k times
+
+Report this ad
+
+498
+
+
+166
+I got this error on my console when I tried to use git pull:
+
+remote: Support for password authentication was removed on August 13, 2021. Please use a personal access token instead. remote: Please see https://github.blog/2020-12-15-token-authentication-requirements-for-git-operations/ for more information. fatal: unable to access "..." : The requested URL returned error: 403
+
+It's very weird, because I just follow the documentation and created a token two weeks ago on GitHub that expires on Tue, Oct 26, 2021. Why has this been removed today?
+
+git
+github
+token
+github-api
+git-pull
+Share
+Edit
+Follow
+Get updates on questions and answers
+edited Sep 4 at 22:24
+
+Peter Mortensen
+28.9k2121 gold badges9696 silver badges123123 bronze badges
+asked Aug 13 at 16:49
+
+Daemes
+3,84133 gold badges33 silver badges88 bronze badges
+26
+They've been sending warnings about this for at least 6 months. – 
+Barmar
+ Aug 14 at 18:11
+5
+I don't understand the question. Literally from the link in the error message "Beginning August 13, 2021, we will no longer accept account passwords when authenticating Git operations on GitHub.com." – 
+njzk2
+ Aug 14 at 21:42 
+9
+This was an unpleasant thing to deal with. I had not seen any warnings. This simple one-line command solution in an answer below worked for me git remote set-url origin https://<token>@github.com/<username>/<repo> – 
+Kai Carver
+ Aug 17 at 20:31
+5
+I get this stupid error even though I already have an ssh key – 
+munchschair
+ Aug 18 at 16:45
+3
+@JuanC here is quick tutorial for mac youtu.be/iKf8-hhdWjs – 
+VeKe
+ Aug 20 at 2:18
+Show 14 more comments
+28 Answers
+
+609
+
+From August 13, 2021, GitHub is no longer accepting account passwords when authenticating Git operations. You need to add a PAT (Personal Access Token) instead, and you can follow the below method to add a PAT on your system.
+
+Create Personal Access Token on GitHub
+From your GitHub account, go to Settings => Developer Settings => Personal Access Token => Generate New Token (Give your password) => Fillup the form => click Generate token => Copy the generated Token, it will be something like ghp_sFhFsSHhTzMDreGRLjmks4Tzuzgthdvfsrta
+
+Now follow below method based on your machine:
+
+For Windows OS ⤴
+Go to Credential Manager from Control Panel => Windows Credentials => find git:https://github.com => Edit => On Password replace with with your GitHub Personal Access Token => You are Done
+
+If you don’t find git:https://github.com => Click on Add a generic credential => Internet address will be git:https://github.com and you need to type in your username and password will be your GitHub Personal Access Token => Click Ok and you are done
+
+For macOS ⤴
+Click on the Spotlight icon (magnifying glass) on the right side of the menu bar. Type Keychain access then press the Enter key to launch the app => In Keychain Access, search for github.com => Find the internet password entry for github.com => Edit or delete the entry accordingly => You are done
+
+For a Linux-based OS ⤴
+For Linux, you need to configure the local GIT client with a username and email address,
+
+$ git config --global user.name "your_github_username"
+$ git config --global user.email "your_github_email"
+$ git config -l
+Once GIT is configured, we can begin using it to access GitHub. Example:
+
+$ git clone https://github.com/YOUR-USERNAME/YOUR-REPOSITORY
+> Cloning into `Spoon-Knife`...
+$ Username for 'https://github.com' : username
+$ Password for 'https://github.com' : give your personal access token here
+Now cache the given record in your computer to remembers the token:
+
+$ git config --global credential.helper cache
+If needed, anytime you can delete the cache record by:
+
+$ git config --global --unset credential.helper
+$ git config --system --unset credential.helper
+Now try to pull with -v to verify
+
+$ git pull -v
+Linux/Debian (Clone as follows):
+
+git clone https://<tokenhere>@github.com/dadenewyyt/react-projects.git
+For PhpStorm
+If you are using PhpStorm, go to menu Git => pull and select authentication via Personal Access Token. Enter your PAT it will allow to pull/push the changes.
+
+Share
+Edit
+Follow
+edited Sep 5 at 5:16
+answered Aug 14 at 6:58
+
+sta
+15.4k88 gold badges3131 silver badges4949 bronze badges
+2
+Be sure to save the token on some local file or in some cloud.Upvoted. – 
+Goran_Ilic_Ilke
+ Aug 14 at 9:37
+2
+Given that the OP states they already created a token two weeks ago, this doesn't address the actual problem. – 
+9769953
+ Aug 14 at 11:55
+3
+Ummmm, it isn't asking for a token when I clone my repo, how should I proceed then? – 
+Prhyme
+ Aug 14 at 15:16
+2
+Same experience as @Prhyme. I am not able to get git to prompt me for username and password, even trying to clone private repos, push to repos, etc. When I go to push to a repo, it continues to give the "Support for password authentication was removed" message, without prompting for anything. – 
+9gt53wS
+ Aug 14 at 19:08 
+2
+For mac first time, when you are prompted for a password when you pushing the code to your repo, enter the access token, It will add the token in the keychain and it won't prompt again. – 
+Dhiraj Himani
+ Aug 23 at 5:38
+Show 23 more comments
+
+247
+
+If you're using macOS, just simply follow these steps:
+Go to this link: https://github.com/settings/tokens (Profile -> settings -> developers setting -> personal access tokens). (don't go to repository setting; it's your profile setting)
+Generate a new token and copy-paste it somewhere safely.
+Now search for an app in your Mac, named Keychain Access.
+Search for github.com (if there are multiple GitHub logins then choose Kind: Internet password), double-click it.
+Click on show password, then enter your Mac's password and hit Enter.
+Password should be visible by now. Now, just paste the token you generated in step 2 and click Save changes.
+And that's it. Enjoy!
+
+If you're using Windows:
+Follow steps 1 and 2 as above.
+Search for an application in your Windows OS, named Credential Manager → then Windows Credentials.
+Search for github.com and edit the password with the token you have generated on GitHub. Now enjoy!
+Developer's hack (shortcode):
+git remote set-url origin https://<githubtoken>@github.com/<username>/<repositoryname>.git
+While cloning:
+
+git clone https://<username>:<githubtoken>@github.com/<username>/<repositoryname>.git
+It will work on every OS (Mac, Windows, or Linux).
+
+Cons: You have to remember or should need to do to each repository in your local. So I'll prefer everyone to use above mentioned steps.
+
+NOTE:
+
+For those who don't have this entry: it could be made. one way to do it is- to clone a project. then it will ask for your username and password. instead of password give it the token and then the entry would be made.
+
+Share
+Edit
+Follow
+edited Sep 16 at 5:06
+answered Aug 14 at 4:46
+
+kartik tyagi
+2,82511 gold badge88 silver badges2323 bronze badges
+14
+There's no such entry for me (Mac) – 
+DarkNeuron
+ Aug 14 at 16:01
+1
+thanks, this works for Linux in my case – 
+Arun Maurya
+ Aug 15 at 6:11
+1
+definitely! thanks @ClaudH . I updated the answer. – 
+kartik tyagi
+ Aug 15 at 14:04 
+2
+I found that on Windows, it was necessary to delete the existing credential in the credential manager. Then, the next time I tried to do a git push, it prompted for the Personal Access Token. Simply resetting the existing credential did not work. – 
+J. Peterson
+ Aug 16 at 7:48
+1
+saved my day 👍 developer heck shortcut was great for me, just removed old remote url and added new one (mac, but i belive this is the case for all OS) – 
+Inzamam Malik
+ Aug 16 at 8:52 
+Show 9 more comments
+
+167
+
+Use My Account → Settings → Developer settings → Personal access tokens → Generate new token.
+
+git remote set-url origin https://<token>@github.com/<username>/<repo>
+Share
+Edit
+Follow
+edited Sep 5 at 9:11
+
+Peter Mortensen
+28.9k2121 gold badges9696 silver badges123123 bronze badges
+answered Aug 14 at 9:05
+Skip to content
+Logo
+Home
+Python Course
+Start Here
+5 Examples of Python List of Tuples
+5 Examples Of
+Hey, readers! In this article, we will be focusing on Python List of Tuples.
+
+What is Python List and Tuple?
+Python List is a data structure that maintains an ordered collection of mutable data elements.
+
+list-name = [ item1, item2, ....., itemN]
+The elements in the list are enclosed within square brackets [].
+
+
+Python Tuple is an immutable data structure whose elements are enclosed within parenthesis ().
+
+tuple-name = (item1, item2, ...., itemN)
+Python List of Tuples
+We can create a list of tuples i.e. the elements of the tuple can be enclosed in a list and thus will follow the characteristics in a similar manner as of a Python list. Since, Python Tuples utilize less amount of space, creating a list of tuples would be more useful in every aspect.
+
+Example:
+
+LT_data = [(1,2,3),('S','P','Q')]
+print("List of Tuples:\n",LT_data)
+Output:
+
+List of Tuples:
+ [(1, 2, 3), ('S', 'P', 'Q')]
+Python list of tuples using zip() function
+Python zip() function can be used to map the lists altogether to create a list of tuples using the below command:
+
+list(zip(list))
+The zip() function returns an iterable of tuples based upon the values passed to it. And, further, the list() function would create a list of those tuples as an output from the zip() function.
+
+Example:
+
+lst1 = [10,20,30]
+lst2 = [50,"Python","JournalDev"]
+lst_tuple = list(zip(lst1,lst2))
+print(lst_tuple)
+Output:
+
+[(10, 50), (20, 'Python'), (30, 'JournalDev')]
+Customized grouping of elements while forming a list of tuples
+While forming a list of tuples, it is possible for us to provide customized grouping of elements depending on the number of elements in the list/tuple.
+
+[element for element in zip(*[iter(list)]*number)]
+List comprehension along with zip() function is used to convert the tuples to list and create a list of tuples. Python iter() function is used to iterate an element of an object at a time. The ‘number‘ would specify the number of elements to be clubbed into a single tuple to form a list.
+
+Example 1:
+
+lst = [50,"Python","JournalDev",100]
+lst_tuple = [x for x in zip(*[iter(lst)])]
+print(lst_tuple)
+In the above example, we have formed a list of tuples with a single element inside a tuple using the iter() method.
+
+Output:
+
+[(50,), ('Python',), ('JournalDev',), (100,)]
+Example 2:
+
+lst = [50,"Python","JournalDev",100]
+lst_tuple = [x for x in zip(*[iter(lst)]*2)]
+print(lst_tuple)
+In this example, two elements are contained inside a tuple to form a list of tuple.
+
+Output:
+
+[(50, 'Python'), ('JournalDev', 100)]
+Python list of tuples using map() function
+Python map function can be used to create a list of tuples. The map() function maps and applies a function to an iterable passed to the function.
+
+map(function, iterable)
+Example:
+
+lst = [[50],["Python"],["JournalDev"],[100]]
+lst_tuple =list(map(tuple, lst))
+print(lst_tuple)
+In this example, we have mapped the input list to the tuple function using map() function. After this, the list() function is used to create a list of the mapped tuple values.
+
+Output:
+
+[(50,), ('Python',), ('JournalDev',), (100,)]
+Python list of tuples using list comprehension and tuple() method
+Python tuple() method along with List Comprehension can be used to form a list of tuples.
+
+The tuple() function helps to create tuples from the set of elements passed to it.
+
+Example:
+
+lst = [[50],["Python"],["JournalDev"],[100]]
+lst_tuple =[tuple(ele) for ele in lst]
+print(lst_tuple)
+Output:
+
+[(50,), ('Python',), ('JournalDev',), (100,)]
+Conclusion
+By this, we have come to the end of the article. I hope you all have enjoyed learning this interesting concept of Python list of tuples.
+
+Feel free to comment below, in case you come across any doubt.
+
+References
+Creating a list of tuples — StackOverflow
+Post navigation
+← Previous Post
+Next Post →
+Search for:
+Search …
+Recent Posts
+5 Easy Ways to Add Rows to a Pandas Dataframe
+DataFrame.query() function: How to query pandas DataFrame?
+8 Methods to Drop Multiple Columns of a Pandas Dataframe
+8 Common Django Commands That You Must Know
+Get Head and Tail of a Pandas Dataframe or Series
+Skip to content
+Python Guides
+Python Guides
+Home
+Python Tutorials
+Machine Learning
+Artificial Intelligence
+Python sort list of tuples
+August 10, 2021 by Bijay Kumar
+In this Python tutorial, we will learn about the Python sort list of tuples. Also, we will discuss:
+
+Python sort list of tuples
+Python sort list of tuples by second element
+How to sort list of tuples by first element descending in Python
+How to sort list of tuples in Python by length
+Python sort list of tuples descending
+Python sort list of tuples by last element
+Python sort list of tuples by first and second element
+Python sort list of tuples by multiple elements
+Python sort list of tuples by second value
+Python sort list of tuples alphabetically
+Python sort list of tuples multiple keys
+Python sort list of tuples by key
+Python sort list of tuples by first
+Python program to sort a list of tuples using lambda
+Python sort list of tuples by second value descending
+How to sort list of tuples in Python? In Python, we can use the sort() method to sort the elements in the ascending order, and by default, it will sort the first element.
+
+Table of Contents  show 
+Python sort list of tuples
+Let us see how to sort a list using tuples in Python.
+In python, we can store multiple values in a single variable by using tuples in Python. Suppose if you have a list of tuples and now you want to sort the tuples in the list.
+There are various methods to solve this task
+By using list.sort() function
+By using bubble sort algorithm
+By using sorted() function
+By using list.sort() function
+Here we can check how to sort the list of tuples by using the list.sort() function in Python.
+This function is a built-in-list method and it sorts the elements of a given list. Sort() function accepts the only key argument that identifies the value and returns the value to be used in the sorting.
+Example:
+
+Now, let’s take an example and check how to sort the list of tuples
+
+new_list = [('john', 6), ('Micheal', 9), ('George', 2), ('steve', 19)]
+
+new_list.sort(key=lambda y: y[1])
+
+print(new_list)
+In the above code, we have to sort the tuples based on the second element.
+
+Here is the output of the following given code
+
+Python sort list of tuples
+Python sort list of tuples
+By using bubble sort algorithm
+Bubble sort is a simple sorting algorithm that sorts n number of elements in a list. It swaps the adjacent items in a given list if they are in the wrong position order. After that, it repeats the process until all elements are sorted.
+In this example, we will take the list of tuples and sort them by using the bubble sort algorithm.
+Example:
+
+new_list = [('Germany',120), ('France',110) , ('England',40) , ('Japan',184), ('China',20)]
+
+new_ele = 0
+new_lis_len = len(new_list)  
+for k in range(0, new_lis_len):  
+    for l in range(0, new_lis_len-k-1):  
+        if (new_list[l][new_ele] > new_list[l + 1][new_ele]):  
+            new_tem = new_list[l]  
+            new_list[l]= new_list[l + 1]  
+            new_list[l + 1]= new_tem  
+
+print(new_list)
+Note: In the above code, the new_ele variable specifies the index position. In this case, we can use the first element to sort the list of tuples.
+
+Here is the execution of the following given code
+
+Python sort list of tuples bubble sort
+Python sort list of tuples bubble sort
+Read Python concatenate tuples with examples
+
+By using sorted() function
+Sorted is a built-in function in Python. This function can be used on all iterables if you want to modify the sorting process then you can use the key function by default its value will be none.
+In this example we have a list of tuples and you can sort this list by using sorted() function.
+Example:
+
+new_list = [(2,6,9),(0,9,7),(1,7,6),(9,1,2)]
+
+b = sorted(new_list)
+print(b)
+Output:
+
+Python sort list of tuple using sorted
+Python sort list of the tuple using sorted
+This is how to sort a list of tuples in Python.
+
+Python sort list of tuples
+The sort() method is used to sort the elements in ascending order and by default, it will sort the first element. If two tuples have the same first element then it will sort them according to the second element.
+
+Example:
+
+roll_list1 = [('Jack', 76), ('Beneth', 78), ('Cirus', 77), ('Faiz', 79)]
+roll_list1.sort()
+print(roll_list1)
+After writing the above code (python sort lists of tuples), Ones you will print “roll_list1” then the output will appear as a “ [(‘Beneth’, 78), (‘Cirus’, 77), (‘Faiz’, 79), (‘Jack’, 76)] ”. Here, sort() method is used to sort the elements in ascending order and it will be sorted by its first element. You can refer to the below screenshot for creating python sort lists of tuples.
+
+Python sort list of tuples
+Python sort list of tuples
+Read Python convert tuple to list
+
+Python sort list of tuples by second element
+Let us see another example, python sort list of tuples by second element.
+
+In python, if you want to sort a list of tuples by the second element then we have the function called sort() and by using lambda function as a key function. A custom comparator is a key function in sort().
+
+Example:
+
+roll_list1 = [('Jack', 76), ('Beneth', 78), ('Cirus', 77), ('Faiz', 79)]
+roll_list1.sort(key=lambda a: a[1])
+print(roll_list1)
+After writing the above code (python sort list of tuples by the second element), Ones you will print “roll_list1” then the output will appear as a “ [(‘Jack’, 76), (‘Cirus’, 77), (‘Beneth’, 78), (‘Faiz’, 79)] ”.
+
+Here, sort() method is used to sort the elements in ascending order and the list of tuples will be sorted by its second element.
+
+Check the screenshot on python sort list of tuples by second element.
+
+Python sort list of tuples by second element
+Python sort list of tuples by second element
+This is how to sort list of tuples by the second element in Python.
+
+Python sort list of tuples by first element descending
+In python, to sort list of tuples by the first element in descending order, we have to use the sort() method with the parameter ” (reverse=True) “ which will sort the elements in descending order.
+
+Example:
+
+roll_list1 = [('Jack', 76), ('Beneth', 78), ('Cirus', 77), ('Faiz', 79)]
+roll_list1.sort(reverse=True)
+print(roll_list1)
+After writing the above code (python sort list of tuples by first element descending), Ones you will print “roll_list1” then the output will appear as a “ [ (‘Jack’, 76), (‘Faiz’, 79), (‘Cirus’, 77), (‘Beneth’, 78)] ”.
+
+Here, sort() method is used with the parameter as “(reverse= True)” to sort the elements in descending order and it will be sorted by its first element.
+
+Check the screenshot.
+
+Python sort list of tuples by first element descending
+Python sort list of tuples by first element descending
+This is how to sort list of tuples by the first element descending order.
+
+Read Python dictionary initialize – Complete tutorial
+
+Python sort list of tuples by length
+In python, to sort list of tuples by length, we have the sort() method and the parameter should be pass to get the length of the first element.
+
+Example:
+
+roll_list1 = [('Jack', 76), ('Beneth', 78), ('Cirus', 77), ('sid', 79)]
+roll_list1.sort(key=lambda a: len(a[0]))
+print(roll_list1)
+After writing the above code (python sort list of tuples by length), Ones you will print “roll_list1” then the output will appear as a “ [(‘Sid’, 79), (‘Jack’, 76), (‘Cirus’, 77), (‘Beneth’, 78)] ”.
+
+Here, sort() method is used with the parameter, and the length is calculated and the element is sorted in ascending order by its first element. You can refer to the below screenshot for the python sort list of tuples by length.
+
+Python sort list of tuples by length
+Python sort list of tuples by length
+The above Python code you can use to sort list of tuples by length.
+
+Read Add string to list Python + Examples
+
+Python sort list of tuples descending
+To sort the list of tuples by descending order we can easily use the sort() function in Python.
+First, we will take the list of tuples and arrange them in unsorted order. Now the sort() function will change the order from increasing to decreasing by passing reverse=True as an argument of the sort() method.
+Example:
+
+Let’s take an example and check how to sort the list in descending order by using the reverse argument
+
+my_list = [('z',80),('f',90),('g',84),('d',92),('a',96)]
+
+my_list.sort(key=lambda i:i[1],reverse=True)
+print(my_list)
+Here is the Screenshot of the following given code
+
+Python sort list of tuples descending
+Python sort list of tuples descending
+This is how to sort list of tuples in descending order in Python.
+
+Python sort list of tuples by last element
+Let us see how to sort the list of tuples by the last element in Python.
+In the sorted() function the key parameter specifies a custom sort order. In this example, we will take a list of tuples and we want to sort tuples based on the last element of each tuple.
+Example:
+
+new_lis=[(4, 2), (7, 8), (3, 1)]
+las_ele = sorted(new_lis, key=lambda i: i[-1])
+print (las_ele)
+Here is the execution of the following given code
+
+Python sort list of tuples by last element
+Python sort list of tuples by the last element
+This is an example of Python sort list of tuples by last element.
+
+Read Python concatenate list with examples
+
+How to sort list of tuple by last element in Python
+Using the bubble sort algorithm, we can easily access the last element of each tuple and use nested loops to perform this particular task.
+
+Here is the Source code
+
+def my_list(las_ele):  
+        
+  
+    end = len(las_ele)  
+    for o in range(0, end):  
+            
+        for p in range(0, end-o-1):  
+            if (las_ele[p][-1] > las_ele[p + 1][-1]):  
+                new_temp = las_ele[p]  
+                las_ele[p]= las_ele[p + 1]  
+                las_ele[p + 1]= new_temp  
+    return las_ele  
+    
+ 
+las_ele =[(9, 6), (8, 3), (4, 1)]
+          
+print(my_list(las_ele))  
+In this example first, we will define a function and pass list as an argument that returns the last element of each tuple.
+
+Here is the output of the following given code
+
+Python sort list of tuples by last element bubble sort
+Python sort list of tuples by last element bubble sort
+This is how to sort list of tuples by last element in Python.
+
+Python sort list of tuples by first and second element
+Here we can check how to sort the list of tuples by the first and second elements
+To sort the first tuple element we can use an index() method like list[0]. Similar to the second element we can use the list[1] index.
+By using the sort method we need to sort the lists in place and order.
+Example:
+
+my_list = [('b', 4), ('d', 1), ('e', 6), ('m', 2)]
+
+my_list.sort(key=lambda s:s[1])
+print("First element values:",my_list)
+my_list.sort(key=lambda i:i[0])
+print("Second element values:",my_list)
+Output:
+
+Python sort list of tuples by first and second element
+Python sort list of tuples by a first and second element
+This is how to sort list of tuples by first and second element in Python.
+
+Read Check if a list exists in another list Python
+
+Python sort list of tuples by multiple elements
+Here we can check how to sort the list of tuples by including multiple elements.
+Let us assume we have multiple elements in each tuple that we want to sort with the double conditions. In this example, we would first sort the second element of each tuple.
+To do this task we can use the sorted() function to sort the elements and returns a tuple containing the sort order.
+Example:
+
+Let’s take an example and check how to sort the list of tuples by multiple elements
+
+my_tup_lis = [(2, 4), (9, 16), (1, 12), (5, 4)]
+mul_sort = sorted(my_tup_lis, key=lambda t: (t[1], t[0]))
+
+print("Multiple elements sorted",mul_sort)
+Screenshot of the following given code
+
+Python sort list of tuples by multiple elements
+Python sort list of tuples by multiple elements
+The above code we can use to sort list of tuples by multiple elements in Python.
+
+Python sort list of tuples alphabetically
+Let us see how to sort the list of tuples alphabetically in Python.
+By using the sort() method we can easily sort the list of tuples alphabetically.
+To do this task first we have to create a function and pass the list as an argument. In the sort method, the key parameter is set to sort the element by using the lambda function. You can also use key=itemgetter as an argument instead of lambda.
+Example:
+
+Here is the Source code
+
+def alpha_tuple(new_list):  
+    
+    
+    new_list.sort(key = lambda a: a[0])  
+    return new_list  
+new_list = [("b", 41), ("u", 46), ("n", 31),
+        ("a", 81), ("m", 92)]
+print("sorted elements alphabetically:",alpha_tuple(new_list))
+Here is the execution of the following given code
+
+Python sort list of tuples alphabetically
+Python sort list of tuples alphabetically
+The above Python code we can use to sort list of tuples alphabetically.
+
+Read Python write a list to CSV
+
+How to sort list of tuple alphabetically by using sorted() function in Python
+Here is another way to sort list of tuples alphabetically by using the sorted() function in Python.
+
+Source Code:
+
+new_list = [(2,'z'),(9,'f'),(4,'c'),(6,'b')]
+
+b = sorted(new_list, key = lambda u: u[1])  
+print("sorted alphabetically",b)
+Output:
+
+Python sort list of tuples alphabetically sorted
+Python sort list of tuples alphabetically sorted
+This is how to sort the list of tuples alphabetically in Python.
+
+Python sort list of tuples multiple keys
+Let us see how to sort the list of tuples including multiple keys in Python.
+By using the method bubble sort algorithm we can perform this particular task. In this example, each tuple is a key element in the given list and obtain the first element of each tuple using the nested loop method.
+Example:
+
+def mul_keys(key):
+      
+
+    l = len(key)
+    for x in range(l):
+        for y in range(l-x-1):
+              
+            if key[y][0] > key[y + 1][0]:
+                key[y], key[y + 1] = key[y + 1], key[y]
+    return key
+  
+key = [("Australia"), ("Switzerland"), ("Europe"),
+        ("Paris"), ("Brazil")]
+print("sorted multiple keys",mul_keys(key))
+Here is the Screenshot of the following given code
+
+Python sort list of tuples multiple keys
+Python sort list of tuples multiple keys
+Read Python list comprehension using if-else
+
+Python sort list of tuples by key
+In python programming, to sort the list of tuples by key we have the sort() method.
+The sort() is a built-in list method which sorts the elements of a given list.
+Example:
+
+Let’s take an example and check how to sort the list of tuples by key
+
+my_list = [('Lily', 2), ('Rose', 7), ('Jasmine', 4), ('Lotus', 1)]
+
+my_list.sort(key=lambda r: r[0])
+
+print(my_list)
+Check the Screenshot of the following given code
+
+Python sort list of tuples by key
+Python sort list of tuples by key
+This is an example of a Python sort list of tuples by key.
+
+Python sort list of tuples by first
+Let us see how to sort the list of tuples by the first element in Python.
+In python to sort the list of tuples by the first element we have to use sorted() method with the argument key=lambda function.
+Example:
+
+n_lis = [('p', 34), ('a', 17), ('f', 16), ('i', 12)]
+
+n_lis.sort(key=lambda u: u[0])
+
+print(n_lis)
+Here is the implementation of the following given code
+
+Python sort list of tuples by first
+Python sort list of tuples by first
+The above Python code you can use to sort list of tuples by first element in Python.
+
+Python program to sort a list of tuples using lambda
+In this example first, we will initialize a list of tuples and sort the list by their second third value in Python.
+
+Example:
+
+to_lis = [('z', 2, 19), ('b', 2, 24), ('c', 2, 28), 
+        ('q', 1, 10), ('p', 1, 19), ('o', 1, 15), ('e', 1, 17)]
+new_list = sorted(to_lis, key=lambda m: (m[1],-m[2]))
+print(new_list)
+Output:
+
+Python program to sort a list of tuples using lambda
+Python program to sort a list of tuples using lambda
+The above code we can use to sort a list of tuples using lambda in Python.
+
+Python sort list of tuples by second value descending
+In Python to sort the list of tuples by second values in descending order, we have to use the Python sort() function.
+
+Example:
+
+new_lis = [('v', 2), ('u', 9), ('q', 10), ('w', 4)]
+
+
+new_lis.sort(key=lambda i:i[1],reverse=True)
+print("Second element descending order:",new_lis)
+Here is the implementation of the following given code
+
+Python sort list of tuples by second value descending
+Python sort list of tuples by second value descending
+This is how to sort list of tuples by second value in descending order in Python.
+
+You may like the following Python tutorials:
+
+How to handle indexerror: string index out of range in Python
+Unexpected EOF while parsing Python
+Remove Unicode characters in python
+Python print without newline
+How to create a list in Python
+Python String Functions
+How to convert an integer to string in python
+How to concatenate strings in python
+Python naming conventions
+How to split a string using regex in python
+Python concatenate arrays
+In this tutorial, we have discussed how to sort list of tuples in python. We discussed the Python sort list of tuples with examples.
+
+Python sort list of tuples
+Python sort list of tuples descending
+Python sort list of tuples by last element
+Python sort list of tuples by first and second element
+Python sort list of tuples by multiple elements
+Python sort list of tuples by second value
+Python sort list of tuples alphabetically
+Python sort list of tuples multiple keys
+Python sort list of tuples by key
+Python sort list of tuples by first
+Python program to sort a list of tuples using lambda
+Python sort list of tuples by second value descending
+Bijay Kumar MVP
+Bijay Kumar
+Entrepreneur, Founder, Author, Blogger, Trainer, and more. Check out my profile.
+
+enjoysharepoint.com/
+Post navigation
+Python while loop continue + Examples
+How to setup Django project
+Follow us in Twitter & Facebook
+
+
+
+
+
+Recent Posts
+Python dictionary increment value
+How to Convert Pandas DataFrame to a Dictionary
+Python Tkinter Spinbox – How to use
+Python dictionary of lists – Detailed Guide
+Python Tkinter search box
+About PythonGuides.comContactPrivacy PolicySitemap
+© 2021 Python Guides  
+Turn Index to Column in a Pandas Dataframe
+Python Yagmail Module – An easy way to have emails sent!
+Memoization in Python – A Brief Introduction
+Plot Mathematical Functions – How to Plot Math Functions in Python?
+Deploy a Django App on Heroku – An Easy Step-by-Step Guide
+Favorite Sites
+JournalDev
+GoLangDocs
+VM-Help
+LinuxForDevices
+MySQLCode
+CodeForGeek
+Copyright © 2021 AskPython · All Rights Reserved
+Privacy Policy · Terms and Conditions · Contact · About
+AskPython is part of JournalDev IT Services Private Limited
+ßãlãjî
+3,98533 gold badges1717 silver badges2929 bronze badges
+7
+Note that this seems to require running this command in each repo for that repo to be reset with the new credentials. Hopefully there is a global solution. – 
+9gt53wS
+ Aug 14 at 19:08
+8
+This one perfectly worked for me. The above one with maximum vote didn't work. – 
+Kapilfreeman
+ Aug 14 at 20:55
+3
+Thanks! Using token as password not work, but adding this work awesome – 
+Syorito Hatsuki
+ Aug 16 at 4:28
+4
+This is very insecure, not only does it allow anyone on the local system with read access to the local repo control over that repo, git remote -v simply discloses the key giving the attacker account wide access to your GitHub account. – 
+Joshua Kolden
+ Aug 17 at 20:48
+4
+@ßãlãjî OS key managers and browsers take grate pains to secure credentials. Normal git workflow do not expose passwords or ssh private keys to other users with read access to a repo. The above advice does. It allows anyone with read access to a copy of a local repo, including for example a shared work or school filesystem, to see the user's clear text Personal Access Token. This extends to archived copies as well, such as source tarballs that retain the .git directory. – 
+Joshua Kolden
+ Aug 18 at 4:27
+Show 3 more comments
+
+61
+
+For Linux these simple steps can solve your problem
+If your Git password is cached in credential.helper, then unset it:
+
+git config --local --unset credential.helper
+Or, If you have set your credentials globally, then:
+
+git config --global --unset credential.helper
+Now go to your GitHub Account settings
+
+Enter image description here
+
+Click Developer Settings
+
+Enter image description here
+
+Select Personal Access
+
+Enter image description here
+
+Generate a token with the given permissions, e.g.,
+
+Enter image description here
+
+Now git pull inside your Git repository
+
+Provide a username and the generated token as a password
+
+Enter image description here
+
+That is a straightforward solution step by step.
+
+PS: If you are annoyed by Git asking for username/token again and again, follow these three simple steps
+Run nano ~/.git-credentials. Remove the GitHub line and save it.
+
+git config --global credential.helper store
+
+Risky as physically the token is saved in file ~/.git-credentials
+
+Run git pull and provide the username and password only once
+
+It will not ask for the username and access token again and again now!
+
+Share
+Edit
+Follow
+edited Sep 5 at 9:14
+
+Peter Mortensen
+28.9k2121 gold badges9696 silver badges123123 bronze badges
+answered Aug 14 at 8:51
+
+Umar Hayat
+1,76166 silver badges2121 bronze badges
+1
+Those are a lot of permissions. What are you using that token for? – 
+Bergi
+ Aug 14 at 13:15
+It all depends on the use case you want to use that token for. So select those permissions according to your use case. – 
+Umar Hayat
+ Aug 14 at 15:37
+Add a comment
+
+60
+
+This message means that you're using a password instead of a personal access token to access GitHub over HTTPS, and that's no longer allowed. GitHub has disabled password authentication because it's common for people to accidentally leak their passwords, and while a personal access token can be restricted to limit the damage, a password cannot.
+
+If you haven't explicitly entered your password at a prompt, then it's likely you have a credential manager which is saving your password and sending it without prompting you.
+
+You can follow the directions for clearing your credential manager listed in the Git FAQ:
+
+$ echo url=https://account@github.com | git credential reject
+You should use this same URL, but replace account with your own username (e.g., in my case, it would look like echo url=https://bk2204@github.com).
+
+Then, the next time you try to push or pull, Git will prompt you for a username and password. For the username, enter your GitHub username, and for the password, generate a new personal access token on the appropriate settings page and paste it into the password field. If you're working from the command line, you may not see any indication that the password was successfully pasted; this is normal, so just hit Enter afterwards.
+
+That will save the personal access token in your credential manager for the next time, assuming you have one set up. If you're not sure if you have one set up, run git config credential.helper and see if it outputs anything.
+
+If you don't have one set up, you should add one so that you don't have to memorize your token. Run one of the following commands, depending on operating system:
+
+git config --global credential.helper manager on Windows;
+git config --global credential.helper osxkeychain on macOS;
+git config --global credential.helper libsecret on Linux (if available); or
+git config --global credential.helper store on Linux if libsecret isn't available.
+Then you can try the push or pull again until you're no longer prompted.
+
+Share
+Edit
+Follow
+edited Sep 4 at 22:28
+
+Peter Mortensen
+28.9k2121 gold badges9696 silver badges123123 bronze badges
+answered Aug 13 at 17:01
+
+bk2204
+37.6k33 gold badges2929 silver badges5050 bronze badges
+1
+Thanks for the info, I just tested git config --global credential.helper osxkeychain and git config --global credential.helper but nothing is happening in my console, so I will try the first solution. Just one question, what is the url=https://account@github.com? The link of my repot or my github? – 
+Daemes
+ Aug 13 at 17:22 
+3
+check out stackoverflow.com/questions/68776300/… to change the password on a mac – 
+Evan
+ Aug 13 at 19:22
+2
+The technique I've mentioned above will clear the password on any system so Git will prompt for it again. That's why we documented it in the FAQ, because the directions are different for each individual OS and credential helper and it's too hard to write a single answer that applies to all systems when it involves the GUI. – 
+bk2204
+ Aug 13 at 19:56
+2
+echo url=https://account@github.com | git credential reject was just what I needed. Thank you! – 
+Nolan Strait
+ Aug 17 at 18:39
+this was extremely clear and helpful, thanks a lot! – 
+baskcat
+ Aug 19 at 13:18
+Show 2 more comments
+
+39
+
+GitHub has made changes in password authentication. If you are trying to access Git by username and password then it does not allow you. So use a personal access token instead of a password to access Git everywhere.
+
+Here are the steps to generate Personal access tokens.
+
+Click here - https://github.com/settings/tokens
+
+Step 1 - Open GitHub and log in with your credentials.
+
+Step 2 - Click on the Setting menu.
+
+Step 3 - From the Setting menu click on Developer Settings
+
+Step 4 - From the Developer Settings, menu click on Personal access token
+
+Step 5 - From the Personal access token click on the Generate new Token button.
+
+Step 6 - Now fill up required details like Note, Expiration, Select scopes. And then click on below Generate Token button.
+
+Step 7 - After that new token has been generated. Copy that generated token and use this token to access Git with username and token.
+
+If you are using Windows then please follow the below step.
+
+Open Control Panel => User Accounts => Manage your credentials => Windows Credentials.
+
+It will show all generic credentials. Find your GitHub URL and click on that. Now click on the edit button. And then add the personal access token generated from GitHub into the password field. And click on the Save button.
+
+Now you can access Git.
+
+If you are accessing Git in Android Studio, if asked for a password then add the GitHub personal access token instead of your password everywhere.
+
+Share
+Edit
+Follow
+edited Sep 18 at 17:11
+answered Aug 14 at 11:03
+
+Jaydip Meghapara
+9891111 silver badges1313 bronze badges
+1
+You are my hero. At first it did not work because for me the correct GitHub URL in the credential manager was git:gitshub.com and not github.com/username. Maybe it helps someone. Also I am of the opinion the hatefulness of GitHub knows no bounds. – 
+Lars Wissler
+ Aug 14 at 11:31
+There's a alternative way as well to do that: you can use direct ssh key as well: youtu.be/egdJy_FWUh4 – 
+Code Cooker
+ Aug 21 at 16:38
+1
+So basically password should be replaced by git token everywhere. – 
+Aditya Kapre Shrewsbury
+ Aug 21 at 20:45
+And, if I am using Linux command line ? Edit: answer: just use the token as password... – 
+3xCh1_23
+ Aug 24 at 18:45 
+1
+@Lars Wissler Thank you so much, you saved me! git:github.com is the correct address indeed. – 
+Blue Phoenix
+ Sep 2 at 1:39
+Add a comment
+
+30
+
+Generate an access token in GitHub from Settings → Developer settings.
+
+If you have cloned your repository in the past and made it as origin, then you can change the authentication so,
+
+git remote set-url origin https://<token>@github.com/<username>/<repo>.git
+If you are going to clone repository after 13 August 2021, then you can use the normal clone command and set the generated access token in the password field.
+
+Share
+Edit
+Follow
+edited Sep 5 at 9:16
+
+Peter Mortensen
+28.9k2121 gold badges9696 silver badges123123 bronze badges
+answered Aug 14 at 14:41
+
+Abdelrahman Elayashy
+34533 silver badges1010 bronze badges
+And it should be "<repo>.git". – 
+G.Vanem
+ Aug 15 at 12:04
+If you're like me and have years worth of git repos that you used password based auth on. I have made this: find . -type f -path '*/.git/*' -name 'config' -exec sed -i 's%https://github.com/%git@github.com:%g' {} \; It will recursively search in the .git folder for any file called config and find and replace the https URL with the git@github one. I'd recommend only doing this on simple repos where you know you have plain vanilla remotes. I haven't tested how it will work on different setups. YMMV! – 
+robmsmt
+ Aug 17 at 2:05 
+I tried removing the username and it worked: git remote set-url origin https://<token>@github.com/<repo>.git – 
+doubleo46
+ Aug 20 at 7:07
+Add a comment
+
+16
+
+For Ubuntu, use the following steps
+
+At https://github.com/settings/tokens, go and generate a token.
+
+git push
+
+username: user_github_username
+
+password: add_generated_token instead of the password.
+
+Share
+Edit
+Follow
+edited Sep 5 at 9:09
+
+Peter Mortensen
+28.9k2121 gold badges9696 silver badges123123 bronze badges
+answered Aug 14 at 17:29
+
+Muhammad Javed Baloch
+42055 silver badges1717 bronze badges
+worked perfectly, simple and effective, thanks! – 
+Mathiasfc
+ Sep 3 at 18:15 
+Add a comment
+
+11
+
+A one-command simple solution to solve it
+If your computer has no SSH key added to the GitHub account, I add information for you to do it at the end of the answer. You should do it first.
+
+After push failed, then do this:
+
+git remote set-url origin git@github.com:{user_id}/{project_name}.git
+And push again. Then it works.
+
+Let me show my case in the following.
+(And I will guide you on how to do your case.)
+
+At the first, when I add, commit, and push, then I meet this issue:
+
+Enter image description here
+
+And then, my current Git log is the following.
+
+Enter image description here
+
+In the final, this is my way to solve the issue.
+
+Enter image description here
+
+In my case,
+
+{project_name} <-> open-idea-pool
+
+{user_id} <-> milochen0418 is the
+
+{branch_name} <-> master
+
+(your branch_name maybe is main, but not master)
+
+When I push failed, the only thing I need is this one command:
+
+git remote set-url origin git@github.com:{user_id}/{project_name}.git
+Then I push it again by:
+
+git push -u origin {branch_name}
+For the example of my case,
+
+git remote set-url origin git@github.com:milochen0418/open-idea-pool.git
+git push -u origin master
+It works.
+
+-- By the way, this is the process of creating an SSH key to GitHub account.
+
+You can refer to these two links to do it. The information here supports Mac, Windows, and Linux.
+
+Issue on adding SSH key to GitHub
+Adding a new SSH key to your GitHub account
+Furthermore, if you want to clone a new project, you can do the following command:
+
+git clone git@github.com:{user_id}/{project_name}.git
+Share
+Edit
+Follow
+edited Sep 13 at 11:37
+answered Aug 14 at 14:07
+
+Milo Chen
+2,19222 gold badges1212 silver badges2525 bronze badges
+2
+I bet this works only because you have an SSH key added to the github account. – 
+HolyBlackCat
+ Aug 14 at 15:17
+@HolyBlackCat Yes, you are right. – 
+Milo Chen
+ Aug 14 at 15:29
+1
+Maybe add the process of creating an SSH key to the answer? – 
+HolyBlackCat
+ Aug 14 at 15:32
+Thanks a lot. I will add some simple processes of creating an SSH key tomorrow. GitHub official doc also introduces how to do it, but that's is too complicated for junior people. – 
+Milo Chen
+ Aug 14 at 15:35
+I've done to add the process of creating an SSH key to github account by refer two excellent links. – 
+Milo Chen
+ Aug 15 at 4:57
+Add a comment
+
+9
+
+Generating a GitHub personal access token (PAT)
+
+Log in to your GitHub account and open Settings → Developer Settings Personal Access Tokens.
+Click on Generate New Token.
+Do not forget to copy and the token after generation. It is accessible only once.
+
+Windows
+
+Open Control Panel → User Accounts → Credential Manager.
+Now, look for git:https://github.com.
+Click on Edit.
+Replace the password with the GitHub Personal Access Token.
+MAC
+
+Click on Spotlight Icon and search for Keychain Access.
+Inside Keychain Access, search for github.com.
+Now, look for the internet password entry for github.com.
+Update the entry.
+Share
+Edit
+Follow
+edited Sep 4 at 22:55
+
+Peter Mortensen
+28.9k2121 gold badges9696 silver badges123123 bronze badges
+answered Aug 14 at 11:40
+
+Aayush
+11155 bronze badges
+I found that on Windows, it was necessary to delete the existing credential in the credential manager. Then, the next time I tried to do a git push, it prompted for the Personal Access Token. Simply resetting the existing credential did not work. – 
+J. Peterson
+ Aug 16 at 7:51
+Your solution is the simplest and fastest. Thanks – 
+ekkeee
+ Aug 16 at 15:04
+Add a comment
+
+7
+
+Mac users -- a simple solution.
+Set up the personal access token in GitHub:
+
+Settings → Developer Settings → Personal access token
+
+Open Keychain → type "GitHub"
+
+Change the password to the personal access token.
+
+Try commit/pushing.
+
+Select "Always allow" and business is as usual.
+
+Share
+Edit
+Follow
+edited Sep 5 at 8:56
+
+Peter Mortensen
+28.9k2121 gold badges9696 silver badges123123 bronze badges
+answered Aug 14 at 17:14
+
+Vasilios Kambouras
+7933 bronze badges
+Add a comment
+
+6
+
+I was using git pull on Linux with a password before.
+
+If that is the case, the only thing you need to do is use token in place of password.
+
+Generate an access token by going to Personal access tokens.
+
+Here is example of git pull
+
+git pull
+
+Username for 'https://github.com': gitusername
+Password for 'https://yourusername@github.com': //Then enter generated token
+Share
+Edit
+Follow
+edited Sep 5 at 22:54
+answered Sep 2 at 9:28
+
+VK321
+4,94833 gold badges3535 silver badges4343 bronze badges
+In my case after doing "git pull", just do "git pull" a second time and you should get prompted for the username and password automatically. It shouldn't require you go to delete your password in the OS settings. – 
+P.Brian.Mackey
+ Sep 9 at 15:27
+Add a comment
+
+5
+
+In Linux, you can generate a new access token in GitHub and directly replace it in place of the password in the ~.git-credentials file.
+
+The password section starts with : and ends with @.
+
+Share
+Edit
+Follow
+edited Sep 5 at 7:48
+
+Peter Mortensen
+28.9k2121 gold badges9696 silver badges123123 bronze badges
+answered Aug 14 at 17:02
+
+Shriraj Hegde
+9155 bronze badges
+Add a comment
+
+5
+
+First create the token on GitHub:
+
+Click on the profile picture and in the menu select Settings
+Select Developer Settings in the left menu at the bottom
+Select Personal Access tokens in the left menu (third option)
+Select Generate new token and follow the next steps.
+If you have not installed GitHub CLI, you would not find it in your keychain Access. Therefore you should install it first.
+
+Install GitHub CLI for macOS
+
+brew install gh
+For Windows:
+
+winget install gh
+scoop install gh
+choco install gh
+On the command line, enter gh auth login, follow the prompts, and provide the following answers
+
+? What account do you want to log into? GitHub.com
+
+? What is your preferred protocol for Git operations? HTTPS
+
+? Authenticate Git with your GitHub credentials? Yes
+
+? How would you like to authenticate GitHub CLI? Paste an authentication token
+
+Paste the token you created on GitHub and press Enter.
+
+Share
+Edit
+Follow
+edited Sep 5 at 10:08
+
+Peter Mortensen
+28.9k2121 gold badges9696 silver badges123123 bronze badges
+answered Sep 4 at 10:01
+
+Pascal Nitcheu
+35533 silver badges44 bronze badges
+Add a comment
+
+4
+
+Go to Settings → Developer settings → generate a new token if it does not exist.
+
+Or copy the token if it exists.
+
+Enter image description here
+
+Then set the token:
+
+git remote set-url origin https://<token>@github.com/<username>/<repo>.git/
+Share
+Edit
+Follow
+edited Sep 5 at 9:30
+
+Peter Mortensen
+28.9k2121 gold badges9696 silver badges123123 bronze badges
+answered Aug 22 at 13:53
+
+FBA Gimhana
+6111 bronze badge
+Add a comment
+
+4
+
+For Mac users
+
+Generate a token and set it in the keychain.
+
+This quick video explains it well.
+
+For Windows Users
+
+Just instead of the keychain, you need to set up Credential Manager with the newly generated token.
+
+Here is a quick video for Windows
+
+Share
+Edit
+Follow
+edited Sep 5 at 9:21
+
+Peter Mortensen
+28.9k2121 gold badges9696 silver badges123123 bronze badges
+answered Aug 20 at 5:10
+
+Shagayag
+811212 bronze badges
+Add a comment
+
+3
+
+As a security precaution, GitHub automatically removes personal access tokens that haven't been used in a year. To provide additional security, we highly recommend adding expiration to your personal access tokens.
+
+Just follow Creating a token.
+
+Share
+Edit
+Follow
+edited Sep 5 at 9:06
+
+Peter Mortensen
+28.9k2121 gold badges9696 silver badges123123 bronze badges
+answered Aug 19 at 11:30
+
+vaibhav
+13111 silver badge22 bronze badges
+Add a comment
+
+3
+
+Run these commands inside your project directory if the project was cloned before 13 Aug 2020:
+
+git remote set-url <remote_name> <remote_url>
+git pull
+Type your username and personal access token as the password.
+
+Share
+Edit
+Follow
+edited Sep 5 at 9:17
+
+Peter Mortensen
+28.9k2121 gold badges9696 silver badges123123 bronze badges
+answered Aug 14 at 18:17
+
+Jirawat Yuktawathin
+3922 bronze badges
+Example - git remote set-url origin github.com/myName/GitTest.git – 
+Akitha_MJ
+ Aug 17 at 17:05 
+Add a comment
+
+3
+
+A quick solution for Windows users
+
+Open Credential Manager and just remove the already-saved credentials for Git: https://github.com.
+
+Enter image description here
+
+After this step, run the command again for pull/push in the terminal. GitHub will ask to log in with your default browser automatically (make sure you are logged in with GitHub in the default browser).
+
+Enter image description here
+
+After successful login, we got this message:
+
+Enter image description here
+
+For more help related to this, you can also watch this video.
+
+Share
+Edit
+Follow
+edited Sep 5 at 9:28
+
+Peter Mortensen
+28.9k2121 gold badges9696 silver badges123123 bronze badges
+answered Aug 20 at 14:56
+
+Arslan Ahmad khan
+4,04811 gold badge2222 silver badges3131 bronze badges
+Add a comment
+
+2
+
+Recently GitHub updated their remote: Support for password authentication. Which was removed on August 13, 2021 to use PAT (personal access token) instead for accessing the GitHub API.
+
+You can read about in the blog post here.
+
+Now to enable PAT
+Log in to your GitHub account.
+Follow this write-up for the next actions.
+Now to use the token on the command line, do this:
+
+git clone https://github.com/username/repo.git
+
+Username: your_username
+Password: your_token
+Note that your token has an expiry time and must be kept privately and used whenever you need to authenticate on the command line.
+
+Heads up
+If your are cloning into a repository that is owned by an:
+
+Organisation
+
+Make sure your are member of that organisation
+Or if some personal repository,
+
+Make sure you have enabled the following
+The organisation/personal will need to enable remote cloning and forking like so:
+
+Go to organisation settings:
+Settings page
+
+Enable member privileges:
+
+Member privileges page
+
+Share
+Edit
+Follow
+edited Sep 5 at 9:48
+
+Peter Mortensen
+28.9k2121 gold badges9696 silver badges123123 bronze badges
+answered Sep 2 at 10:41
+
+Leo Sammy
+38322 silver badges77 bronze badges
+Add a comment
+
+2
+
+In three commands:
+
+First create a token as indicated in the official documentation: Creating a personal access token
+
+Then reset the Git credentials
+
+git config --global --unset credential.helper
+Clone or pull your repositories:
+
+`git pull` or `git clone`
+Then enter the token as your password.
+
+If you want to save your token, you can use:
+
+git config --global credential.helper cache
+Share
+Edit
+Follow
+edited Sep 5 at 9:08
+
+Peter Mortensen
+28.9k2121 gold badges9696 silver badges123123 bronze badges
+answered Aug 19 at 19:00
+
+Badr Bellaj
+7,50811 gold badge3333 silver badges3131 bronze badges
+Add a comment
+
+2
+
+For people who want to use Sourcetree:
+
+Just copy like this at the source path:
+
+https://<token>@github.com/<username>/<repo>
+Add like your repository like this to the source path
+
+Share
+Edit
+Follow
+edited Sep 5 at 9:51
+
+Peter Mortensen
+28.9k2121 gold badges9696 silver badges123123 bronze badges
+answered Sep 4 at 7:28
+
+MHL007
+3122 bronze badges
+Add a comment
+
+2
+
+Android Studio Arctic Fox Solution (Windows 10)
+I was authenticated in Android Studio Arctic Fox (latest version) using a personal access token, but still, I was getting this error on August 14, 2021:
+
+remote: Support for password authentication was removed on August 13, 2021. Please use a personal access token instead.
+I generated a new access token on github.com, removed my GitHub account from Android Studio, and added the account again with the new access token. But still, it was showing the same error.
+
+Reading other solutions on Stack Overflow, I downloaded the GitHub CLI, and added my GitHub account in the Windows command prompt with the access token successfully, and tried to push the repository from Android Studio again, which again failed.
+
+Then following this article, I did the following at the command line:
+
+cd <project-directory>
+git remote set-url origin https://<TOKEN>@github.com/<user_name>/<repo_name>.git
+I pushed again from Android Studio, and it worked finally!
+
+Share
+Edit
+Follow
+edited Sep 4 at 22:46
+
+Peter Mortensen
+28.9k2121 gold badges9696 silver badges123123 bronze badges
+answered Aug 14 at 9:31
+
+Raw Hasan
+30511 silver badge1111 bronze badges
+Add a comment
+
+1
+
+For anyone who uses Sourcetree as the Git client, open Preferences → go to the Accounts tab → Add GitHub account → Auth type = basic → fill in your GitHub account and the access tokens from GitHub you created as a password → Use HTTPS protocol → done!
+
+Share
+Edit
+Follow
+edited Sep 5 at 9:33
+
+Peter Mortensen
+28.9k2121 gold badges9696 silver badges123123 bronze badges
+answered Aug 23 at 6:06
+
+gogoqaz
+17222 silver badges1010 bronze badges
+Add a comment
+
+1
+
+The best solution I have found so far:
+
+Install GitHub CLI, brew install gh or check how to install for other OSes
+
+Type gh auth login in your terminal
+
+Follow through like this:
+
+What account do you want to log into?
+Choose GitHub.com
+
+What is your preferred protocol for Git operations?
+Choose HTTPS
+
+Authenticate Git with your GitHub credentials?
+Choose Yes
+
+How would you like to authenticate GitHub CLI?
+Choose Login with a web browser
+
+(Copy the one-time code and paste in the browser)
+
+Press 'Enter' to open github.com in your browser
+Share
+Edit
+Follow
+edited Sep 5 at 10:10
+
+Peter Mortensen
+28.9k2121 gold badges9696 silver badges123123 bronze badges
+answered Sep 4 at 8:48
+
+ashdaily
+1,2291414 silver badges2424 bronze badges
+In case someone is looking for way to install brew on Arch based distros: gist.github.com/fardjad/114ebf50a0dd031418bb63b3b134db51 – 
+Harry Adel
+ Sep 7 at 21:32 
+Thank you, Peter! Your solution has worked for me – 
+Monero Jeanniton
+ yesterday
+Add a comment
+
+1
+
+For those who followed the instruction to generate the Personal access tokens, but forgot to select suitable scopes:
+
+Please do remember to choose suitable scopes like repositories. You won't get a different error prompt whether you use the previous password or a new token without a suitable scope.
+
+Share
+Edit
+Follow
+edited Sep 5 at 9:23
+
+Peter Mortensen
+28.9k2121 gold badges9696 silver badges123123 bronze badges
+answered Aug 20 at 9:51
+
+Eugene
+8,87744 gold badges3636 silver badges5959 bronze badges
+Re "choose suitable scopes like repositories" (seems incomprehensible): Do you mean "choose suitable scopes for repositories"? Or something else? Please respond by editing (changing) your answer, not here in comments (without "Edit:", "Update:", or similar - the answer should appear as if it was written today). – 
+Peter Mortensen
+ Sep 5 at 9:25
+Add a comment
+
+0
+
+I was not able to clone the project was always giving this error. The solution I encouraged was, after having generated the Token as the post was spoken in the post, I did as described below.
+
+Using personal access token for the cloning new project
+
+For cloning also you just need to modify the url as you have done instep 2
+
+Older way to clone a repository
+
+git clone repository_url folder_name
+
+git clone https://github.com/<user>/<repository> my_project
+
+New way of clone with personal access token
+
+git clone https://<token>@github.com/<user>/<repository> my_project
+
+How to solve, I want to share my solution.
+
+Share
+Edit
+Follow
+answered Sep 22 at 15:46
+
+Jackson Meires
+3777 bronze badges
+This does not provide an answer to the question. Once you have sufficient reputation you will be able to comment on any post; instead, provide answers that don't require clarification from the asker. - From Review – 
+Daly
+ Sep 22 at 20:54
+Add a comment
+
+0
+
+Yesterday I had some issues trying to find GitHub on the Keychain in my Macbook. I've tried a lot of ways with no success.
+
+From my perspective, the workaround I've used to be able to pull and push from my GitHub account fast, was doing it by SSH.
+
+This allowed me to do it with no further configuration.
+
+You can do it going here: https://github.com/settings/keys
+Then New SSH key
+If you already created a ssh locally just run pbcopy < ~/.ssh/id_rsa.pub in your terminal
+Then pull, push, clone or whatever you need from your GitHub repo and it's done
+I know this is not the solution to the issue, but it worked for me since I needed to do it fast and to me honest there is no reason that I need to use https instead of SSH
+
+Hope this information is useful for someone!
+
+Cheers!
+
+Share
+Edit
+Follow
+answered Sep 19 at 20:09
+
+undefinedsoul
+1133 bronze badges
+That did not work for me. – 
+Daniel
+ Sep 21 at 20:47
+Can you provide more details? Do you already have a ssh generated? Also, make sure when you are cloning the repo you change. HTTPS to SSH – 
+undefinedsoul
+ Sep 22 at 18:46 
+Add a comment
+Highly active question. Earn 10 reputation (not counting the association bonus) in order to answer this question. The reputation requirement helps protect this question from spam and non-answer activity.
+Not the answer you're looking for? Browse other questions tagged git github token github-api git-pull or ask your own question.
+The Overflow Blog
+GitLab launches Collective on Stack Overflow
+Podcast 378: The paranoid style in application development
+Featured on Meta
+Profile image changes (TL/DR: You won't be able to switch back to your old...
+Updates to Privacy Policy (September 2021)
+Outdated Answers: We’re adding an answer view tracking pixel
+Hot Meta Posts
+9
+Why is this question off topic and how can I improve it?
+28
+Should ads on Stack Overflow be accessible?
+
+Report this ad
+Grand Parade
+Grand Parade
+Gambling, Gaming
+Senior Full Stack Developer
+Kraków, Poland  Paid relocation  Visa sponsor
+java
+javascript
+Senior Full Stack Developer (Node.js)
+Kraków, Poland  Paid relocation  Visa sponsor
+node.js
+javascript
+Scala Developer
+Kraków, Poland  Paid relocation  Visa sponsor
+scala
+java
+Linked
+42
+Use token to push some code to GitHub - "Support for password authentication was removed"
+-1
+git push not working , error is "The requested URL returned error: 403"
+-2
+Creating a personal access token
+0
+I can login to github with my username and password but can not push code with them using HTTPs
+1
+Can someone tell me please how to reconnect to my remote repository GitHub from git using personal access tokens?
+0
+My GitHub wont allow me to push instead is asks me for login credentials and invalidates it even when my password is correct
+0
+Authenticate with GitHub - HTTPS /I can't get TOTP, SMS or token methods to work
+-1
+git error login to github on command line
+0
+How to resolve password authentication was removed on August 13, 2021 error while pushing into the master?
+0
+Github failed to Authentication
+See more linked questions
+Related
+286
+Authenticate with GitHub using a token
+6
+When I try to pull or push in GitHub, I am getting an error message: "Please use a personal access token instead."
+3
+Tortoise GIT - Support for password authentication was removed on August 13, 2021
+5
+authentication was removed. Please use a personal access token instead
+0
+Jenkins - Github Plugin - Using Personal Access Token post Aug13 update not working with url change
+0
+how to set a github token for github pages deploy
+Hot Network Questions
+Does grabbing someone by the jacket constitute assault?
+Why doesn't the 737 MAX have an APU EGT gauge like all other 737s do?
+How does 一回だって in this sentence mean "not even once" when there's no negative?
+What constitutes a "religious belief"
+Conference discussant: Is it appropriate to ask someone to present my comments?
+How did Meng Wanzhou succeed to go back to China?
+Why do gas stations charge higher price for credit card purchase while customers can purchase their gift cards from a third party?
+Rust at welded steel beam joint
+Why would space nations find more value in empty space rather than star systems?
+Bayesian analysis used merely as a computational tool?
+An introductory reference for tensor networks
+Which one right, UDP has 508 or 512 bytes payload limits?
+Constructing a GHZ state without CNOTs
+How can I discourage players from attacking everything they encounter?
+How does 100 1000 become 200?
+Aligning large Equation with &
+The pattern - be +adjective+ as + to verb
+Two Scenes From A Conan The Barbarian Story?
+Relying upon a Spiritual Guide, who created this idea? Is it actually a necessity for liberation?
+Can someone without the mark of storm change the direction of an airship?
+Why does "brother" have the instrumental case in this Polish sentence?
+Why are potions always brewed in extreme bulk?
+Wave height data for Indian east coast
+Is it possible for LEO satellites to detect a usable signal from regular mobile phones on the ground?
+ Question feed
+
+STACK OVERFLOW
+Questions
+Jobs
+Developer Jobs Directory
+Salary Calculator
+Help
+Mobile
+Disable Responsiveness
+PRODUCTS
+Teams
+Talent
+Advertising
+Enterprise
+COMPANY
+About
+Press
+Work Here
+Legal
+Privacy Policy
+Terms of Service
+Contact Us
+Cookie Settings
+Cookie Policy
+STACK EXCHANGE
+NETWORK
+Technology
+Life / Arts
+Culture / Recreation
+Science
+Other
+Blog
+Facebook
+Twitter
+LinkedIn
+Instagram
+site design / logo © 2021 Stack Exchange Inc; user contributions licensed under cc by-sa. rev 2021.9.24.40305
+
+ Stack Overflow
+Products
+Search…
+
+Aik
+1
+, 1 reputation
+1
+Home
+PUBLIC
+Questions
+Tags
+Users
+COLLECTIVES
+Explore Collectives
+FIND A JOB
+Jobs
+Companies
+TEAMS
+Stack Overflow for Teams – Collaborate and share knowledge with a private group. 
+Support for password authentication was removed. Please use a personal access token instead
+Asked 1 month ago
+Active 3 days ago
+Viewed 266k times
+
+Report this ad
+
+498
+
+
+166
+I got this error on my console when I tried to use git pull:
+
+remote: Support for password authentication was removed on August 13, 2021. Please use a personal access token instead. remote: Please see https://github.blog/2020-12-15-token-authentication-requirements-for-git-operations/ for more information. fatal: unable to access "..." : The requested URL returned error: 403
+
+It's very weird, because I just follow the documentation and created a token two weeks ago on GitHub that expires on Tue, Oct 26, 2021. Why has this been removed today?
+
+git
+github
+token
+github-api
+git-pull
+Share
+Edit
+Follow
+Get updates on questions and answers
+edited Sep 4 at 22:24
+
+Peter Mortensen
+28.9k2121 gold badges9696 silver badges123123 bronze badges
+asked Aug 13 at 16:49
+
+Daemes
+3,84133 gold badges33 silver badges88 bronze badges
+26
+They've been sending warnings about this for at least 6 months. – 
+Barmar
+ Aug 14 at 18:11
+5
+I don't understand the question. Literally from the link in the error message "Beginning August 13, 2021, we will no longer accept account passwords when authenticating Git operations on GitHub.com." – 
+njzk2
+ Aug 14 at 21:42 
+9
+This was an unpleasant thing to deal with. I had not seen any warnings. This simple one-line command solution in an answer below worked for me git remote set-url origin https://<token>@github.com/<username>/<repo> – 
+Kai Carver
+ Aug 17 at 20:31
+5
+I get this stupid error even though I already have an ssh key – 
+munchschair
+ Aug 18 at 16:45
+3
+@JuanC here is quick tutorial for mac youtu.be/iKf8-hhdWjs – 
+VeKe
+ Aug 20 at 2:18
+Show 14 more comments
+28 Answers
+
+609
+
+From August 13, 2021, GitHub is no longer accepting account passwords when authenticating Git operations. You need to add a PAT (Personal Access Token) instead, and you can follow the below method to add a PAT on your system.
+
+Create Personal Access Token on GitHub
+From your GitHub account, go to Settings => Developer Settings => Personal Access Token => Generate New Token (Give your password) => Fillup the form => click Generate token => Copy the generated Token, it will be something like ghp_sFhFsSHhTzMDreGRLjmks4Tzuzgthdvfsrta
+
+Now follow below method based on your machine:
+
+For Windows OS ⤴
+Go to Credential Manager from Control Panel => Windows Credentials => find git:https://github.com => Edit => On Password replace with with your GitHub Personal Access Token => You are Done
+
+If you don’t find git:https://github.com => Click on Add a generic credential => Internet address will be git:https://github.com and you need to type in your username and password will be your GitHub Personal Access Token => Click Ok and you are done
+
+For macOS ⤴
+Click on the Spotlight icon (magnifying glass) on the right side of the menu bar. Type Keychain access then press the Enter key to launch the app => In Keychain Access, search for github.com => Find the internet password entry for github.com => Edit or delete the entry accordingly => You are done
+
+For a Linux-based OS ⤴
+For Linux, you need to configure the local GIT client with a username and email address,
+
+$ git config --global user.name "your_github_username"
+$ git config --global user.email "your_github_email"
+$ git config -l
+Once GIT is configured, we can begin using it to access GitHub. Example:
+
+$ git clone https://github.com/YOUR-USERNAME/YOUR-REPOSITORY
+> Cloning into `Spoon-Knife`...
+$ Username for 'https://github.com' : username
+$ Password for 'https://github.com' : give your personal access token here
+Now cache the given record in your computer to remembers the token:
+
+$ git config --global credential.helper cache
+If needed, anytime you can delete the cache record by:
+
+$ git config --global --unset credential.helper
+$ git config --system --unset credential.helper
+Now try to pull with -v to verify
+
+$ git pull -v
+Linux/Debian (Clone as follows):
+
+git clone https://<tokenhere>@github.com/dadenewyyt/react-projects.git
+For PhpStorm
+If you are using PhpStorm, go to menu Git => pull and select authentication via Personal Access Token. Enter your PAT it will allow to pull/push the changes.
+
+Share
+Edit
+Follow
+edited Sep 5 at 5:16
+answered Aug 14 at 6:58
+
+sta
+15.4k88 gold badges3131 silver badges4949 bronze badges
+2
+Be sure to save the token on some local file or in some cloud.Upvoted. – 
+Goran_Ilic_Ilke
+ Aug 14 at 9:37
+2
+Given that the OP states they already created a token two weeks ago, this doesn't address the actual problem. – 
+9769953
+ Aug 14 at 11:55
+3
+Ummmm, it isn't asking for a token when I clone my repo, how should I proceed then? – 
+Prhyme
+ Aug 14 at 15:16
+2
+Same experience as @Prhyme. I am not able to get git to prompt me for username and password, even trying to clone private repos, push to repos, etc. When I go to push to a repo, it continues to give the "Support for password authentication was removed" message, without prompting for anything. – 
+9gt53wS
+ Aug 14 at 19:08 
+2
+For mac first time, when you are prompted for a password when you pushing the code to your repo, enter the access token, It will add the token in the keychain and it won't prompt again. – 
+Dhiraj Himani
+ Aug 23 at 5:38
+Show 23 more comments
+
+247
+
+If you're using macOS, just simply follow these steps:
+Go to this link: https://github.com/settings/tokens (Profile -> settings -> developers setting -> personal access tokens). (don't go to repository setting; it's your profile setting)
+Generate a new token and copy-paste it somewhere safely.
+Now search for an app in your Mac, named Keychain Access.
+Search for github.com (if there are multiple GitHub logins then choose Kind: Internet password), double-click it.
+Click on show password, then enter your Mac's password and hit Enter.
+Password should be visible by now. Now, just paste the token you generated in step 2 and click Save changes.
+And that's it. Enjoy!
+
+If you're using Windows:
+Follow steps 1 and 2 as above.
+Search for an application in your Windows OS, named Credential Manager → then Windows Credentials.
+Search for github.com and edit the password with the token you have generated on GitHub. Now enjoy!
+Developer's hack (shortcode):
+git remote set-url origin https://<githubtoken>@github.com/<username>/<repositoryname>.git
+While cloning:
+
+git clone https://<username>:<githubtoken>@github.com/<username>/<repositoryname>.git
+It will work on every OS (Mac, Windows, or Linux).
+
+Cons: You have to remember or should need to do to each repository in your local. So I'll prefer everyone to use above mentioned steps.
+
+NOTE:
+
+For those who don't have this entry: it could be made. one way to do it is- to clone a project. then it will ask for your username and password. instead of password give it the token and then the entry would be made.
+
+Share
+Edit
+Follow
+edited Sep 16 at 5:06
+answered Aug 14 at 4:46
+
+kartik tyagi
+2,82511 gold badge88 silver badges2323 bronze badges
+14
+There's no such entry for me (Mac) – 
+DarkNeuron
+ Aug 14 at 16:01
+1
+thanks, this works for Linux in my case – 
+Arun Maurya
+ Aug 15 at 6:11
+1
+definitely! thanks @ClaudH . I updated the answer. – 
+kartik tyagi
+ Aug 15 at 14:04 
+2
+I found that on Windows, it was necessary to delete the existing credential in the credential manager. Then, the next time I tried to do a git push, it prompted for the Personal Access Token. Simply resetting the existing credential did not work. – 
+J. Peterson
+ Aug 16 at 7:48
+1
+saved my day 👍 developer heck shortcut was great for me, just removed old remote url and added new one (mac, but i belive this is the case for all OS) – 
+Inzamam Malik
+ Aug 16 at 8:52 
+Show 9 more comments
+
+167
+
+Use My Account → Settings → Developer settings → Personal access tokens → Generate new token.
+
+git remote set-url origin https://<token>@github.com/<username>/<repo>
+Share
+Edit
+Follow
+edited Sep 5 at 9:11
+
+Peter Mortensen
+28.9k2121 gold badges9696 silver badges123123 bronze badges
+answered Aug 14 at 9:05
+
+ßãlãjî
+3,98533 gold badges1717 silver badges2929 bronze badges
+7
+Note that this seems to require running this command in each repo for that repo to be reset with the new credentials. Hopefully there is a global solution. – 
+9gt53wS
+ Aug 14 at 19:08
+8
+This one perfectly worked for me. The above one with maximum vote didn't work. – 
+Kapilfreeman
+ Aug 14 at 20:55
+3
+Thanks! Using token as password not work, but adding this work awesome – 
+Syorito Hatsuki
+ Aug 16 at 4:28
+4
+This is very insecure, not only does it allow anyone on the local system with read access to the local repo control over that repo, git remote -v simply discloses the key giving the attacker account wide access to your GitHub account. – 
+Joshua Kolden
+ Aug 17 at 20:48
+4
+@ßãlãjî OS key managers and browsers take grate pains to secure credentials. Normal git workflow do not expose passwords or ssh private keys to other users with read access to a repo. The above advice does. It allows anyone with read access to a copy of a local repo, including for example a shared work or school filesystem, to see the user's clear text Personal Access Token. This extends to archived copies as well, such as source tarballs that retain the .git directory. – 
+Joshua Kolden
+ Aug 18 at 4:27
+Show 3 more comments
+
+61
+
+For Linux these simple steps can solve your problem
+If your Git password is cached in credential.helper, then unset it:
+
+git config --local --unset credential.helper
+Or, If you have set your credentials globally, then:
+
+git config --global --unset credential.helper
+Now go to your GitHub Account settings
+
+Enter image description here
+
+Click Developer Settings
+
+Enter image description here
+
+Select Personal Access
+
+Enter image description here
+
+Generate a token with the given permissions, e.g.,
+
+Enter image description here
+
+Now git pull inside your Git repository
+
+Provide a username and the generated token as a password
+
+Enter image description here
+
+That is a straightforward solution step by step.
+
+PS: If you are annoyed by Git asking for username/token again and again, follow these three simple steps
+Run nano ~/.git-credentials. Remove the GitHub line and save it.
+
+git config --global credential.helper store
+
+Risky as physically the token is saved in file ~/.git-credentials
+
+Run git pull and provide the username and password only once
+
+It will not ask for the username and access token again and again now!
+
+Share
+Edit
+Follow
+edited Sep 5 at 9:14
+
+Peter Mortensen
+28.9k2121 gold badges9696 silver badges123123 bronze badges
+answered Aug 14 at 8:51
+
+Umar Hayat
+1,76166 silver badges2121 bronze badges
+1
+Those are a lot of permissions. What are you using that token for? – 
+Bergi
+ Aug 14 at 13:15
+It all depends on the use case you want to use that token for. So select those permissions according to your use case. – 
+Umar Hayat
+ Aug 14 at 15:37
+Add a comment
+
+60
+
+This message means that you're using a password instead of a personal access token to access GitHub over HTTPS, and that's no longer allowed. GitHub has disabled password authentication because it's common for people to accidentally leak their passwords, and while a personal access token can be restricted to limit the damage, a password cannot.
+
+If you haven't explicitly entered your password at a prompt, then it's likely you have a credential manager which is saving your password and sending it without prompting you.
+
+You can follow the directions for clearing your credential manager listed in the Git FAQ:
+
+$ echo url=https://account@github.com | git credential reject
+You should use this same URL, but replace account with your own username (e.g., in my case, it would look like echo url=https://bk2204@github.com).
+
+Then, the next time you try to push or pull, Git will prompt you for a username and password. For the username, enter your GitHub username, and for the password, generate a new personal access token on the appropriate settings page and paste it into the password field. If you're working from the command line, you may not see any indication that the password was successfully pasted; this is normal, so just hit Enter afterwards.
+
+That will save the personal access token in your credential manager for the next time, assuming you have one set up. If you're not sure if you have one set up, run git config credential.helper and see if it outputs anything.
+
+If you don't have one set up, you should add one so that you don't have to memorize your token. Run one of the following commands, depending on operating system:
+
+git config --global credential.helper manager on Windows;
+git config --global credential.helper osxkeychain on macOS;
+git config --global credential.helper libsecret on Linux (if available); or
+git config --global credential.helper store on Linux if libsecret isn't available.
+Then you can try the push or pull again until you're no longer prompted.
+
+Share
+Edit
+Follow
+edited Sep 4 at 22:28
+
+Peter Mortensen
+28.9k2121 gold badges9696 silver badges123123 bronze badges
+answered Aug 13 at 17:01
+
+bk2204
+37.6k33 gold badges2929 silver badges5050 bronze badges
+1
+Thanks for the info, I just tested git config --global credential.helper osxkeychain and git config --global credential.helper but nothing is happening in my console, so I will try the first solution. Just one question, what is the url=https://account@github.com? The link of my repot or my github? – 
+Daemes
+ Aug 13 at 17:22 
+3
+check out stackoverflow.com/questions/68776300/… to change the password on a mac – 
+Evan
+ Aug 13 at 19:22
+2
+The technique I've mentioned above will clear the password on any system so Git will prompt for it again. That's why we documented it in the FAQ, because the directions are different for each individual OS and credential helper and it's too hard to write a single answer that applies to all systems when it involves the GUI. – 
+bk2204
+ Aug 13 at 19:56
+2
+echo url=https://account@github.com | git credential reject was just what I needed. Thank you! – 
+Nolan Strait
+ Aug 17 at 18:39
+this was extremely clear and helpful, thanks a lot! – 
+baskcat
+ Aug 19 at 13:18
+Show 2 more comments
+
+39
+
+GitHub has made changes in password authentication. If you are trying to access Git by username and password then it does not allow you. So use a personal access token instead of a password to access Git everywhere.
+
+Here are the steps to generate Personal access tokens.
+
+Click here - https://github.com/settings/tokens
+
+Step 1 - Open GitHub and log in with your credentials.
+
+Step 2 - Click on the Setting menu.
+
+Step 3 - From the Setting menu click on Developer Settings
+
+Step 4 - From the Developer Settings, menu click on Personal access token
+
+Step 5 - From the Personal access token click on the Generate new Token button.
+
+Step 6 - Now fill up required details like Note, Expiration, Select scopes. And then click on below Generate Token button.
+
+Step 7 - After that new token has been generated. Copy that generated token and use this token to access Git with username and token.
+
+If you are using Windows then please follow the below step.
+
+Open Control Panel => User Accounts => Manage your credentials => Windows Credentials.
+
+It will show all generic credentials. Find your GitHub URL and click on that. Now click on the edit button. And then add the personal access token generated from GitHub into the password field. And click on the Save button.
+
+Now you can access Git.
+
+If you are accessing Git in Android Studio, if asked for a password then add the GitHub personal access token instead of your password everywhere.
+
+Share
+Edit
+Follow
+edited Sep 18 at 17:11
+answered Aug 14 at 11:03
+
+Jaydip Meghapara
+9891111 silver badges1313 bronze badges
+1
+You are my hero. At first it did not work because for me the correct GitHub URL in the credential manager was git:gitshub.com and not github.com/username. Maybe it helps someone. Also I am of the opinion the hatefulness of GitHub knows no bounds. – 
+Lars Wissler
+ Aug 14 at 11:31
+There's a alternative way as well to do that: you can use direct ssh key as well: youtu.be/egdJy_FWUh4 – 
+Code Cooker
+ Aug 21 at 16:38
+1
+So basically password should be replaced by git token everywhere. – 
+Aditya Kapre Shrewsbury
+ Aug 21 at 20:45
+And, if I am using Linux command line ? Edit: answer: just use the token as password... – 
+3xCh1_23
+ Aug 24 at 18:45 
+1
+@Lars Wissler Thank you so much, you saved me! git:github.com is the correct address indeed. – 
+Blue Phoenix
+ Sep 2 at 1:39
+Add a comment
+
+30
+
+Generate an access token in GitHub from Settings → Developer settings.
+
+If you have cloned your repository in the past and made it as origin, then you can change the authentication so,
+
+git remote set-url origin https://<token>@github.com/<username>/<repo>.git
+If you are going to clone repository after 13 August 2021, then you can use the normal clone command and set the generated access token in the password field.
+
+Share
+Edit
+Follow
+edited Sep 5 at 9:16
+
+Peter Mortensen
+28.9k2121 gold badges9696 silver badges123123 bronze badges
+answered Aug 14 at 14:41
+
+Abdelrahman Elayashy
+34533 silver badges1010 bronze badges
+And it should be "<repo>.git". – 
+G.Vanem
+ Aug 15 at 12:04
+If you're like me and have years worth of git repos that you used password based auth on. I have made this: find . -type f -path '*/.git/*' -name 'config' -exec sed -i 's%https://github.com/%git@github.com:%g' {} \; It will recursively search in the .git folder for any file called config and find and replace the https URL with the git@github one. I'd recommend only doing this on simple repos where you know you have plain vanilla remotes. I haven't tested how it will work on different setups. YMMV! – 
+robmsmt
+ Aug 17 at 2:05 
+I tried removing the username and it worked: git remote set-url origin https://<token>@github.com/<repo>.git – 
+doubleo46
+ Aug 20 at 7:07
+Add a comment
+
+16
+
+For Ubuntu, use the following steps
+
+At https://github.com/settings/tokens, go and generate a token.
+
+git push
+
+username: user_github_username
+
+password: add_generated_token instead of the password.
+
+Share
+Edit
+Follow
+edited Sep 5 at 9:09
+
+Peter Mortensen
+28.9k2121 gold badges9696 silver badges123123 bronze badges
+answered Aug 14 at 17:29
+
+Muhammad Javed Baloch
+42055 silver badges1717 bronze badges
+worked perfectly, simple and effective, thanks! – 
+Mathiasfc
+ Sep 3 at 18:15 
+Add a comment
+
+11
+
+A one-command simple solution to solve it
+If your computer has no SSH key added to the GitHub account, I add information for you to do it at the end of the answer. You should do it first.
+
+After push failed, then do this:
+
+git remote set-url origin git@github.com:{user_id}/{project_name}.git
+And push again. Then it works.
+
+Let me show my case in the following.
+(And I will guide you on how to do your case.)
+
+At the first, when I add, commit, and push, then I meet this issue:
+
+Enter image description here
+
+And then, my current Git log is the following.
+
+Enter image description here
+
+In the final, this is my way to solve the issue.
+
+Enter image description here
+
+In my case,
+
+{project_name} <-> open-idea-pool
+
+{user_id} <-> milochen0418 is the
+
+{branch_name} <-> master
+
+(your branch_name maybe is main, but not master)
+
+When I push failed, the only thing I need is this one command:
+
+git remote set-url origin git@github.com:{user_id}/{project_name}.git
+Then I push it again by:
+
+git push -u origin {branch_name}
+For the example of my case,
+
+git remote set-url origin git@github.com:milochen0418/open-idea-pool.git
+git push -u origin master
+It works.
+
+-- By the way, this is the process of creating an SSH key to GitHub account.
+
+You can refer to these two links to do it. The information here supports Mac, Windows, and Linux.
+
+Issue on adding SSH key to GitHub
+Adding a new SSH key to your GitHub account
+Furthermore, if you want to clone a new project, you can do the following command:
+
+git clone git@github.com:{user_id}/{project_name}.git
+Share
+Edit
+Follow
+edited Sep 13 at 11:37
+answered Aug 14 at 14:07
+
+Milo Chen
+2,19222 gold badges1212 silver badges2525 bronze badges
+2
+I bet this works only because you have an SSH key added to the github account. – 
+HolyBlackCat
+ Aug 14 at 15:17
+@HolyBlackCat Yes, you are right. – 
+Milo Chen
+ Aug 14 at 15:29
+1
+Maybe add the process of creating an SSH key to the answer? – 
+HolyBlackCat
+ Aug 14 at 15:32
+Thanks a lot. I will add some simple processes of creating an SSH key tomorrow. GitHub official doc also introduces how to do it, but that's is too complicated for junior people. – 
+Milo Chen
+ Aug 14 at 15:35
+I've done to add the process of creating an SSH key to github account by refer two excellent links. – 
+Milo Chen
+ Aug 15 at 4:57
+Add a comment
+
+9
+
+Generating a GitHub personal access token (PAT)
+
+Log in to your GitHub account and open Settings → Developer Settings Personal Access Tokens.
+Click on Generate New Token.
+Do not forget to copy and the token after generation. It is accessible only once.
+
+Windows
+
+Open Control Panel → User Accounts → Credential Manager.
+Now, look for git:https://github.com.
+Click on Edit.
+Replace the password with the GitHub Personal Access Token.
+MAC
+
+Click on Spotlight Icon and search for Keychain Access.
+Inside Keychain Access, search for github.com.
+Now, look for the internet password entry for github.com.
+Update the entry.
+Share
+Edit
+Follow
+edited Sep 4 at 22:55
+
+Peter Mortensen
+28.9k2121 gold badges9696 silver badges123123 bronze badges
+answered Aug 14 at 11:40
+
+Aayush
+11155 bronze badges
+I found that on Windows, it was necessary to delete the existing credential in the credential manager. Then, the next time I tried to do a git push, it prompted for the Personal Access Token. Simply resetting the existing credential did not work. – 
+J. Peterson
+ Aug 16 at 7:51
+Your solution is the simplest and fastest. Thanks – 
+ekkeee
+ Aug 16 at 15:04
+Add a comment
+
+7
+
+Mac users -- a simple solution.
+Set up the personal access token in GitHub:
+
+Settings → Developer Settings → Personal access token
+
+Open Keychain → type "GitHub"
+
+Change the password to the personal access token.
+
+Try commit/pushing.
+
+Select "Always allow" and business is as usual.
+
+Share
+Edit
+Follow
+edited Sep 5 at 8:56
+
+Peter Mortensen
+28.9k2121 gold badges9696 silver badges123123 bronze badges
+answered Aug 14 at 17:14
+
+Vasilios Kambouras
+7933 bronze badges
+Add a comment
+
+6
+
+I was using git pull on Linux with a password before.
+
+If that is the case, the only thing you need to do is use token in place of password.
+
+Generate an access token by going to Personal access tokens.
+
+Here is example of git pull
+
+git pull
+
+Username for 'https://github.com': gitusername
+Password for 'https://yourusername@github.com': //Then enter generated token
+Share
+Edit
+Follow
+edited Sep 5 at 22:54
+answered Sep 2 at 9:28
+
+VK321
+4,94833 gold badges3535 silver badges4343 bronze badges
+In my case after doing "git pull", just do "git pull" a second time and you should get prompted for the username and password automatically. It shouldn't require you go to delete your password in the OS settings. – 
+P.Brian.Mackey
+ Sep 9 at 15:27
+Add a comment
+
+5
+
+In Linux, you can generate a new access token in GitHub and directly replace it in place of the password in the ~.git-credentials file.
+
+The password section starts with : and ends with @.
+
+Share
+Edit
+Follow
+edited Sep 5 at 7:48
+
+Peter Mortensen
+28.9k2121 gold badges9696 silver badges123123 bronze badges
+answered Aug 14 at 17:02
+
+Shriraj Hegde
+9155 bronze badges
+Add a comment
+
+5
+
+First create the token on GitHub:
+
+Click on the profile picture and in the menu select Settings
+Select Developer Settings in the left menu at the bottom
+Select Personal Access tokens in the left menu (third option)
+Select Generate new token and follow the next steps.
+If you have not installed GitHub CLI, you would not find it in your keychain Access. Therefore you should install it first.
+
+Install GitHub CLI for macOS
+
+brew install gh
+For Windows:
+
+winget install gh
+scoop install gh
+choco install gh
+On the command line, enter gh auth login, follow the prompts, and provide the following answers
+
+? What account do you want to log into? GitHub.com
+
+? What is your preferred protocol for Git operations? HTTPS
+
+? Authenticate Git with your GitHub credentials? Yes
+
+? How would you like to authenticate GitHub CLI? Paste an authentication token
+
+Paste the token you created on GitHub and press Enter.
+
+Share
+Edit
+Follow
+edited Sep 5 at 10:08
+
+Peter Mortensen
+28.9k2121 gold badges9696 silver badges123123 bronze badges
+answered Sep 4 at 10:01
+
+Pascal Nitcheu
+35533 silver badges44 bronze badges
+Add a comment
+
+4
+
+Go to Settings → Developer settings → generate a new token if it does not exist.
+
+Or copy the token if it exists.
+
+Enter image description here
+
+Then set the token:
+
+git remote set-url origin https://<token>@github.com/<username>/<repo>.git/
+Share
+Edit
+Follow
+edited Sep 5 at 9:30
+
+Peter Mortensen
+28.9k2121 gold badges9696 silver badges123123 bronze badges
+answered Aug 22 at 13:53
+
+FBA Gimhana
+6111 bronze badge
+Add a comment
+
+4
+
+For Mac users
+
+Generate a token and set it in the keychain.
+
+This quick video explains it well.
+
+For Windows Users
+
+Just instead of the keychain, you need to set up Credential Manager with the newly generated token.
+
+Here is a quick video for Windows
+
+Share
+Edit
+Follow
+edited Sep 5 at 9:21
+
+Peter Mortensen
+28.9k2121 gold badges9696 silver badges123123 bronze badges
+answered Aug 20 at 5:10
+
+Shagayag
+811212 bronze badges
+Add a comment
+
+3
+
+As a security precaution, GitHub automatically removes personal access tokens that haven't been used in a year. To provide additional security, we highly recommend adding expiration to your personal access tokens.
+
+Just follow Creating a token.
+
+Share
+Edit
+Follow
+edited Sep 5 at 9:06
+
+Peter Mortensen
+28.9k2121 gold badges9696 silver badges123123 bronze badges
+answered Aug 19 at 11:30
+
+vaibhav
+13111 silver badge22 bronze badges
+Add a comment
+
+3
+
+Run these commands inside your project directory if the project was cloned before 13 Aug 2020:
+
+git remote set-url <remote_name> <remote_url>
+git pull
+Type your username and personal access token as the password.
+
+Share
+Edit
+Follow
+edited Sep 5 at 9:17
+
+Peter Mortensen
+28.9k2121 gold badges9696 silver badges123123 bronze badges
+answered Aug 14 at 18:17
+
+Jirawat Yuktawathin
+3922 bronze badges
+Example - git remote set-url origin github.com/myName/GitTest.git – 
+Akitha_MJ
+ Aug 17 at 17:05 
+Add a comment
+
+3
+
+A quick solution for Windows users
+
+Open Credential Manager and just remove the already-saved credentials for Git: https://github.com.
+
+Enter image description here
+
+After this step, run the command again for pull/push in the terminal. GitHub will ask to log in with your default browser automatically (make sure you are logged in with GitHub in the default browser).
+
+Enter image description here
+
+After successful login, we got this message:
+
+Enter image description here
+
+For more help related to this, you can also watch this video.
+
+Share
+Edit
+Follow
+edited Sep 5 at 9:28
+
+Peter Mortensen
+28.9k2121 gold badges9696 silver badges123123 bronze badges
+answered Aug 20 at 14:56
+
+Arslan Ahmad khan
+4,04811 gold badge2222 silver badges3131 bronze badges
+Add a comment
+
+2
+
+Recently GitHub updated their remote: Support for password authentication. Which was removed on August 13, 2021 to use PAT (personal access token) instead for accessing the GitHub API.
+
+You can read about in the blog post here.
+
+Now to enable PAT
+Log in to your GitHub account.
+Follow this write-up for the next actions.
+Now to use the token on the command line, do this:
+
+git clone https://github.com/username/repo.git
+
+Username: your_username
+Password: your_token
+Note that your token has an expiry time and must be kept privately and used whenever you need to authenticate on the command line.
+
+Heads up
+If your are cloning into a repository that is owned by an:
+
+Organisation
+
+Make sure your are member of that organisation
+Or if some personal repository,
+
+Make sure you have enabled the following
+The organisation/personal will need to enable remote cloning and forking like so:
+
+Go to organisation settings:
+Settings page
+
+Enable member privileges:
+
+Member privileges page
+
+Share
+Edit
+Follow
+edited Sep 5 at 9:48
+
+Peter Mortensen
+28.9k2121 gold badges9696 silver badges123123 bronze badges
+answered Sep 2 at 10:41
+
+Leo Sammy
+38322 silver badges77 bronze badges
+Add a comment
+
+2
+
+In three commands:
+
+First create a token as indicated in the official documentation: Creating a personal access token
+
+Then reset the Git credentials
+
+git config --global --unset credential.helper
+Clone or pull your repositories:
+
+`git pull` or `git clone`
+Then enter the token as your password.
+
+If you want to save your token, you can use:
+
+git config --global credential.helper cache
+Share
+Edit
+Follow
+edited Sep 5 at 9:08
+
+Peter Mortensen
+28.9k2121 gold badges9696 silver badges123123 bronze badges
+answered Aug 19 at 19:00
+
+Badr Bellaj
+7,50811 gold badge3333 silver badges3131 bronze badges
+Add a comment
+
+2
+
+For people who want to use Sourcetree:
+
+Just copy like this at the source path:
+
+https://<token>@github.com/<username>/<repo>
+Add like your repository like this to the source path
+
+Share
+Edit
+Follow
+edited Sep 5 at 9:51
+
+Peter Mortensen
+28.9k2121 gold badges9696 silver badges123123 bronze badges
+answered Sep 4 at 7:28
+
+MHL007
+3122 bronze badges
+Add a comment
+
+2
+
+Android Studio Arctic Fox Solution (Windows 10)
+I was authenticated in Android Studio Arctic Fox (latest version) using a personal access token, but still, I was getting this error on August 14, 2021:
+
+remote: Support for password authentication was removed on August 13, 2021. Please use a personal access token instead.
+I generated a new access token on github.com, removed my GitHub account from Android Studio, and added the account again with the new access token. But still, it was showing the same error.
+
+Reading other solutions on Stack Overflow, I downloaded the GitHub CLI, and added my GitHub account in the Windows command prompt with the access token successfully, and tried to push the repository from Android Studio again, which again failed.
+
+Then following this article, I did the following at the command line:
+
+cd <project-directory>
+git remote set-url origin https://<TOKEN>@github.com/<user_name>/<repo_name>.git
+I pushed again from Android Studio, and it worked finally!
+
+Share
+Edit
+Follow
+edited Sep 4 at 22:46
+
+Peter Mortensen
+28.9k2121 gold badges9696 silver badges123123 bronze badges
+answered Aug 14 at 9:31
+
+Raw Hasan
+30511 silver badge1111 bronze badges
+Add a comment
+
+1
+
+For anyone who uses Sourcetree as the Git client, open Preferences → go to the Accounts tab → Add GitHub account → Auth type = basic → fill in your GitHub account and the access tokens from GitHub you created as a password → Use HTTPS protocol → done!
+
+Share
+Edit
+Follow
+edited Sep 5 at 9:33
+
+Peter Mortensen
+28.9k2121 gold badges9696 silver badges123123 bronze badges
+answered Aug 23 at 6:06
+
+gogoqaz
+17222 silver badges1010 bronze badges
+Add a comment
+
+1
+
+The best solution I have found so far:
+
+Install GitHub CLI, brew install gh or check how to install for other OSes
+
+Type gh auth login in your terminal
+
+Follow through like this:
+
+What account do you want to log into?
+Choose GitHub.com
+
+What is your preferred protocol for Git operations?
+Choose HTTPS
+
+Authenticate Git with your GitHub credentials?
+Choose Yes
+
+How would you like to authenticate GitHub CLI?
+Choose Login with a web browser
+
+(Copy the one-time code and paste in the browser)
+
+Press 'Enter' to open github.com in your browser
+Share
+Edit
+Follow
+edited Sep 5 at 10:10
+
+Peter Mortensen
+28.9k2121 gold badges9696 silver badges123123 bronze badges
+answered Sep 4 at 8:48
+
+ashdaily
+1,2291414 silver badges2424 bronze badges
+In case someone is looking for way to install brew on Arch based distros: gist.github.com/fardjad/114ebf50a0dd031418bb63b3b134db51 – 
+Harry Adel
+ Sep 7 at 21:32 
+Thank you, Peter! Your solution has worked for me – 
+Monero Jeanniton
+ yesterday
+Add a comment
+
+1
+
+For those who followed the instruction to generate the Personal access tokens, but forgot to select suitable scopes:
+
+Please do remember to choose suitable scopes like repositories. You won't get a different error prompt whether you use the previous password or a new token without a suitable scope.
+
+Share
+Edit
+Follow
+edited Sep 5 at 9:23
+
+Peter Mortensen
+28.9k2121 gold badges9696 silver badges123123 bronze badges
+answered Aug 20 at 9:51
+
+Eugene
+8,87744 gold badges3636 silver badges5959 bronze badges
+Re "choose suitable scopes like repositories" (seems incomprehensible): Do you mean "choose suitable scopes for repositories"? Or something else? Please respond by editing (changing) your answer, not here in comments (without "Edit:", "Update:", or similar - the answer should appear as if it was written today). – 
+Peter Mortensen
+ Sep 5 at 9:25
+Add a comment
+
+0
+
+I was not able to clone the project was always giving this error. The solution I encouraged was, after having generated the Token as the post was spoken in the post, I did as described below.
+
+Using personal access token for the cloning new project
+
+For cloning also you just need to modify the url as you have done instep 2
+
+Older way to clone a repository
+
+git clone repository_url folder_name
+
+git clone https://github.com/<user>/<repository> my_project
+
+New way of clone with personal access token
+
+git clone https://<token>@github.com/<user>/<repository> my_project
+
+How to solve, I want to share my solution.
+
+Share
+Edit
+Follow
+answered Sep 22 at 15:46
+
+Jackson Meires
+3777 bronze badges
+This does not provide an answer to the question. Once you have sufficient reputation you will be able to comment on any post; instead, provide answers that don't require clarification from the asker. - From Review – 
+Daly
+ Sep 22 at 20:54
+Add a comment
+
+0
+
+Yesterday I had some issues trying to find GitHub on the Keychain in my Macbook. I've tried a lot of ways with no success.
+
+From my perspective, the workaround I've used to be able to pull and push from my GitHub account fast, was doing it by SSH.
+
+This allowed me to do it with no further configuration.
+
+You can do it going here: https://github.com/settings/keys
+Then New SSH key
+If you already created a ssh locally just run pbcopy < ~/.ssh/id_rsa.pub in your terminal
+Then pull, push, clone or whatever you need from your GitHub repo and it's done
+I know this is not the solution to the issue, but it worked for me since I needed to do it fast and to me honest there is no reason that I need to use https instead of SSH
+
+Hope this information is useful for someone!
+
+Cheers!
+
+Share
+Edit
+Follow
+answered Sep 19 at 20:09
+
+undefinedsoul
+1133 bronze badges
+That did not work for me. – 
+Daniel
+ Sep 21 at 20:47
+Can you provide more details? Do you already have a ssh generated? Also, make sure when you are cloning the repo you change. HTTPS to SSH – 
+undefinedsoul
+ Sep 22 at 18:46 
+Add a comment
+Highly active question. Earn 10 reputation (not counting the association bonus) in order to answer this question. The reputation requirement helps protect this question from spam and non-answer activity.
+Not the answer you're looking for? Browse other questions tagged git github token github-api git-pull or ask your own question.
+The Overflow Blog
+GitLab launches Collective on Stack Overflow
+Podcast 378: The paranoid style in application development
+Featured on Meta
+Profile image changes (TL/DR: You won't be able to switch back to your old...
+Updates to Privacy Policy (September 2021)
+Outdated Answers: We’re adding an answer view tracking pixel
+Hot Meta Posts
+9
+Why is this question off topic and how can I improve it?
+28
+Should ads on Stack Overflow be accessible?
+
+Report this ad
+Grand Parade
+Grand Parade
+Gambling, Gaming
+Senior Full Stack Developer
+Kraków, Poland  Paid relocation  Visa sponsor
+java
+javascript
+Senior Full Stack Developer (Node.js)
+Kraków, Poland  Paid relocation  Visa sponsor
+node.js
+javascript
+Scala Developer
+Kraków, Poland  Paid relocation  Visa sponsor
+scala
+java
+Linked
+42
+Use token to push some code to GitHub - "Support for password authentication was removed"
+-1
+git push not working , error is "The requested URL returned error: 403"
+-2
+Creating a personal access token
+0
+I can login to github with my username and password but can not push code with them using HTTPs
+1
+Can someone tell me please how to reconnect to my remote repository GitHub from git using personal access tokens?
+0
+My GitHub wont allow me to push instead is asks me for login credentials and invalidates it even when my password is correct
+0
+Authenticate with GitHub - HTTPS /I can't get TOTP, SMS or token methods to work
+-1
+git error login to github on command line
+0
+How to resolve password authentication was removed on August 13, 2021 error while pushing into the master?
+0
+Github failed to Authentication
+See more linked questions
+Related
+286
+Authenticate with GitHub using a token
+6
+When I try to pull or push in GitHub, I am getting an error message: "Please use a personal access token instead."
+3
+Tortoise GIT - Support for password authentication was removed on August 13, 2021
+5
+authentication was removed. Please use a personal access token instead
+0
+Jenkins - Github Plugin - Using Personal Access Token post Aug13 update not working with url change
+0
+how to set a github token for github pages deploy
+Hot Network Questions
+Does grabbing someone by the jacket constitute assault?
+Why doesn't the 737 MAX have an APU EGT gauge like all other 737s do?
+How does 一回だって in this sentence mean "not even once" when there's no negative?
+What constitutes a "religious belief"
+Conference discussant: Is it appropriate to ask someone to present my comments?
+How did Meng Wanzhou succeed to go back to China?
+Why do gas stations charge higher price for credit card purchase while customers can purchase their gift cards from a third party?
+Rust at welded steel beam joint
+Why would space nations find more value in empty space rather than star systems?
+Bayesian analysis used merely as a computational tool?
+An introductory reference for tensor networks
+Which one right, UDP has 508 or 512 bytes payload limits?
+Constructing a GHZ state without CNOTs
+How can I discourage players from attacking everything they encounter?
+How does 100 1000 become 200?
+Aligning large Equation with &
+The pattern - be +adjective+ as + to verb
+Two Scenes From A Conan The Barbarian Story?
+Relying upon a Spiritual Guide, who created this idea? Is it actually a necessity for liberation?
+Can someone without the mark of storm change the direction of an airship?
+Why does "brother" have the instrumental case in this Polish sentence?
+Why are potions always brewed in extreme bulk?
+Wave height data for Indian east coast
+Is it possible for LEO satellites to detect a usable signal from regular mobile phones on the ground?
+ Question feed
+
+STACK OVERFLOW
+Questions
+Jobs
+Developer Jobs Directory
+Salary Calculator
+Help
+Mobile
+Disable Responsiveness
+PRODUCTS
+Teams
+Talent
+Advertising
+Enterprise
+COMPANY
+About
+Press
+Work Here
+Legal
+Privacy Policy
+Terms of Service
+Contact Us
+Cookie Settings
+Cookie Policy
+STACK EXCHANGE
+NETWORK
+Technology
+Life / Arts
+Culture / Recreation
+Science
+Other
+Blog
+Facebook
+Twitter
+LinkedIn
+Instagram
+site design / logo © 2021 Stack Exchange Inc; user contributions licensed under cc by-sa. rev 2021.9.24.40305
+
+ 
