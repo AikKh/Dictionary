@@ -4,17 +4,17 @@ alpha = 'abcdefghijklmnopqrstuvwxyz'
 def DoneA():
     txt.focus()
     btnDone = Button(window, text="Done", command=choice_A)
-    btnDone.grid(column=1, row=6) 
+    btnDone.grid(column=1, row=1) 
 
 def DoneB():
     txt.focus()
     btnDone = Button(window, text="Done", command=choice_B)
-    btnDone.grid(column=1, row=6) 
+    btnDone.grid(column=1, row=1) 
 
 def DoneC():
     txt.focus()
     btnDone = Button(window, text="Done", command=choice_C)
-    btnDone.grid(column=1, row=6) 
+    btnDone.grid(column=1, row=1) 
 
 def choice_A():
     list_txt_A = txt.get()
@@ -60,21 +60,16 @@ window.geometry('400x450')
 
 
 txt = Entry(window,width=10)  
-txt.grid(column=0, row=5) 
+txt.grid(column=0, row=1) 
 
 
-lblor1 = Label(window, text='or', font=("Arial Bold", 10))
-lblor1.grid(column=0, row=1)
-lblor2 = Label(window, text='or', font=("Arial Bold", 10))
-lblor2.grid(column=0, row=3)
-
-btnA = Button(window, text="A", command=DoneA, bg="red", fg="green")
+btnA = Button(window, text="A", command=DoneA)
 btnA.place(width=1000, height=1000)
 btnA.grid(column=0, row=0) 
-btnB = Button(window, text="B", command=DoneB, bg="blue", fg="yellow")
-btnB.grid(column=0, row=2)
-btnC = Button(window, text="C", command=DoneC, bg="orange", fg="violet")
-btnC.grid(column=0, row=4)
+btnB = Button(window, text="B", command=DoneB)
+btnB.grid(column=2, row=0)
+btnC = Button(window, text="C", command=DoneC)
+btnC.grid(column=4, row=0)
 
  
 window.mainloop()
