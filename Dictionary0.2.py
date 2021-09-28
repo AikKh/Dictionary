@@ -38,9 +38,9 @@ def choice_B():
 def choice_C():
     count_letters = 0
     text = txt.get()
-    x = 7
+    x = 2
     for i in alpha:
-        count_letter = text.count(i)
+        count_letter = text.count(i) + text.count(i.upper())
         count_letters = count_letters + count_letter
     totalLen = count_letters
     for j in alpha:
