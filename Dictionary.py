@@ -24,6 +24,7 @@ class Dictionary():
     def choice_A(self, text):
         list_txt_A = text.split(' ')
         list_txt_A.sort()
+        list_txt_A = set(list_txt_A)
         list_txt_A = ', '.join(list_txt_A)
         print(list_txt_A)
         
